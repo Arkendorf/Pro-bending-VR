@@ -8,7 +8,10 @@ EditorBuildSettings:
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/MultiPLayer.unity
     guid: ef721d638880b41babd534957b8e25e1
+  - enabled: 1
+    path: Assets/Scenes/ProbendingScene.unity
+    guid: 90d1c6dbdade3bc4594687165288a505
   m_configObjects: {}
