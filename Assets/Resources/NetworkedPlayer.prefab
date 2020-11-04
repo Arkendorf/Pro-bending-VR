@@ -503,6 +503,7 @@ GameObject:
   - component: {fileID: 8654498374267844286}
   - component: {fileID: 6063229124274235418}
   - component: {fileID: 1266447118545955972}
+  - component: {fileID: 7416620798571040173}
   m_Layer: 0
   m_Name: NetworkedPlayer
   m_TagString: Untagged
@@ -597,6 +598,26 @@ MonoBehaviour:
   AutoCreateRecorderIfNotFound: 0
   UsePrimaryRecorder: 1
   SetupDebugSpeaker: 1
+--- !u!114 &7416620798571040173
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6063229124274235419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7754c116dc51403fb96738653378bc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  networkedPlayer: {fileID: 0}
+  rightHand: 0
+  button: 24576
+  shoulderOffset: {x: -0.1, y: -0.1, z: 0}
+  speedThreshold: 0.6
+  speedMin: 0.4
+  minPunchTime: 0.1
+  element: Fire
 --- !u!1 &8548574120027484594
 GameObject:
   m_ObjectHideFlags: 0
@@ -1116,15 +1137,15 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: ff044c79d2fdd304786f3f1f64d49389, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d0c255d07fd68f14b94e55d388e7e6bb, type: 3}
---- !u!1 &7049380136564862067 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 100054, guid: d0c255d07fd68f14b94e55d388e7e6bb,
-    type: 3}
-  m_PrefabInstance: {fileID: 7049380136564894373}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7049380136564764691 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400054, guid: d0c255d07fd68f14b94e55d388e7e6bb,
+    type: 3}
+  m_PrefabInstance: {fileID: 7049380136564894373}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7049380136564862067 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 100054, guid: d0c255d07fd68f14b94e55d388e7e6bb,
     type: 3}
   m_PrefabInstance: {fileID: 7049380136564894373}
   m_PrefabAsset: {fileID: 0}
