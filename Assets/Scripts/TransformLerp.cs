@@ -1,25 +1,31 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class TransformLerp : MonoBehaviour
 {
-    [Tooltip("How many updates the position should get a second (such as how many updates per second sent by the server)")]
-    public int UpdatesPerSecond = 12;
+    //[Tooltip("How many updates the position should get a second (such as how many updates per second sent by the server)")]
+    private int UpdatesPerSecond = 12;
 
     // The current transform
-    private Transform startTransform;
+    private Vector3 startPosition;
+    private Quaternion startRotation;
     // The goal transform
-    private Transform endTransform;
+    private Vector3 endPosition;
+    private Quaternion endRotation;
     // The time since the last transform
     private float timeSinceLastUpdate = 0;
 
     // Start is called before the first frame update
     void Start()
     {
+        UpdatesPerSecond = PhotonNetwork.SendRate;
         // Set the transforms to the initial position
-        startTransform = transform;
-        endTransform = transform;
+        startPosition = transform.position;
+        startRotation = transform.rotation;
+        endPosition = transform.position;
+        endRotation = transform.rotation;
     }
 
     // Update is called once per frame
@@ -28,31 +34,39 @@ public class TransformLerp : MonoBehaviour
         // Update the time since the last update
         timeSinceLastUpdate += Time.deltaTime;
         // Get the predicted fraction of time until the next update
-        float frac = timeSinceLastUpdate / (1 / UpdatesPerSecond);
+        float frac = timeSinceLastUpdate / (1f / UpdatesPerSecond);
 
         // Update the objects actual transform to be between the start and end transforms, by frac amount
-        transform.position = Vector3.Lerp(startTransform.position, endTransform.position, frac);
-        transform.rotation = Quaternion.Lerp(startTransform.rotation, endTransform.rotation, frac);
+        transform.position = Vector3.Lerp(startPosition, endPosition, frac);
+        transform.rotation = Quaternion.Lerp(startRotation, endRotation, frac);
     }
 
     // Updates the gameobject to interpolate to the given transform
     public void UpdateTransform(Transform transform)
     {
-        startTransform = endTransform;
-        endTransform = transform;
+        startPosition = endPosition;
+        startRotation = endRotation;
+        endPosition = transform.position;
+        endRotation = transform.rotation;
 
-        timeSinceLastUpdate = 0;
+        ResetTransform();
     }
 
     // Updates the gameobject to interpolate to the given position and rotation
     public void UpdateTransform(Vector3 position, Quaternion rotation)
     {
-        startTransform = endTransform;
-        Transform newTransform = new GameObject().transform;
-        newTransform.position = position;
-        newTransform.rotation = rotation;
-        endTransform = newTransform;
+        startPosition = endPosition;
+        startRotation = endRotation;
+        endPosition = position;
+        endRotation = rotation;
 
+        ResetTransform();
+    }
+
+    private void ResetTransform()
+    {
+        transform.position = startPosition;
+        transform.rotation = startRotation;
         timeSinceLastUpdate = 0;
     }
 }

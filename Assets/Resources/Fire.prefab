@@ -4770,6 +4770,7 @@ GameObject:
   - component: {fileID: 3179997516146083773}
   - component: {fileID: 6661671252060933917}
   - component: {fileID: -8389307473842609126}
+  - component: {fileID: 5355847287488749820}
   m_Layer: 0
   m_Name: Fire
   m_TagString: Untagged
@@ -4841,7 +4842,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9841f3eee71c9504f893065593fdfe8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speedMultiplier: 3
+  speedMultiplier: 2
   minSpeed: 0.01
   timeBeforeDecceleration: 1
   deccelerationSpeed: 1
@@ -4919,3 +4920,15 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &5355847287488749820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7599649185748286736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3635ade025292d4493f7b26a0a49d3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

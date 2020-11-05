@@ -27,6 +27,11 @@ public class NetworkedPlayer : MonoBehaviourPun, Photon.Pun.IPunObservable
     public Transform playerLeftHandLocal;
     public Transform playerRightHandLocal;
 
+    // Get the lerp scripts for all moving objects
+    public TransformLerp headTransformLerp;
+    public TransformLerp leftHandTransformLerp;
+    public TransformLerp rightHandTransformLerp;
+
     void Start ()
     {
         Debug.Log("i'm instantiated");
@@ -58,6 +63,12 @@ public class NetworkedPlayer : MonoBehaviourPun, Photon.Pun.IPunObservable
             // This is where we set InputManager variable to my Player so that inputManager can affect things here all it does right now is change nickName text
             GameObject.Find("InputManager").GetComponent<InputManager>().myPlayer = this;
         }
+        else
+        {
+            headTransformLerp = head.GetComponent<TransformLerp>();
+            leftHandTransformLerp = leftHand.GetComponent<TransformLerp>();
+            rightHandTransformLerp = rightHand.GetComponent<TransformLerp>();
+        }     
     }
 
     void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
@@ -77,15 +88,29 @@ public class NetworkedPlayer : MonoBehaviourPun, Photon.Pun.IPunObservable
         }
         else
         {
-            
-            head.transform.localPosition = (Vector3)stream.ReceiveNext();
-            head.transform.localRotation = (Quaternion)stream.ReceiveNext();
+            if (headTransformLerp) {
+                headTransformLerp.UpdateTransform((Vector3)stream.ReceiveNext(), (Quaternion)stream.ReceiveNext());
+            }
+            else {
+                head.transform.localPosition = (Vector3)stream.ReceiveNext();
+                head.transform.localRotation = (Quaternion)stream.ReceiveNext();
+            }
 
-            leftHand.transform.localPosition = (Vector3)stream.ReceiveNext();
-            leftHand.transform.localRotation = (Quaternion)stream.ReceiveNext();
+            if (leftHandTransformLerp) {
+                leftHandTransformLerp.UpdateTransform((Vector3)stream.ReceiveNext(), (Quaternion)stream.ReceiveNext());
+            }
+            else {
+                leftHand.transform.localPosition = (Vector3)stream.ReceiveNext();
+                leftHand.transform.localRotation = (Quaternion)stream.ReceiveNext();
+            }
 
-            rightHand.transform.localPosition = (Vector3)stream.ReceiveNext();
-            rightHand.transform.localRotation = (Quaternion)stream.ReceiveNext();
+            if (rightHandTransformLerp) {
+                rightHandTransformLerp.UpdateTransform((Vector3)stream.ReceiveNext(), (Quaternion)stream.ReceiveNext());
+            }
+            else {
+                rightHand.transform.localPosition = (Vector3)stream.ReceiveNext();
+                rightHand.transform.localRotation = (Quaternion)stream.ReceiveNext();
+            }
 
             string tempname = (string)stream.ReceiveNext();
 

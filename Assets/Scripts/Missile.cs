@@ -17,10 +17,21 @@ public class Missile : MonoBehaviourPun, Photon.Pun.IPunObservable
     [HideInInspector] public Vector3 velocity { set; get; }
     private float lifetime;
 
+    private TransformLerp transformLerp;
+
     // Start is called before the first frame update
     void OnEnable()
     {
         lifetime = 0;
+    }
+
+    void Start()
+    {
+        transformLerp = GetComponent<TransformLerp>();
+        if (photonView.IsMine)
+        {
+            transformLerp.enabled = false;
+        }
     }
 
     // Update is called once per frame
@@ -53,7 +64,14 @@ public class Missile : MonoBehaviourPun, Photon.Pun.IPunObservable
         else
         {   
             if (!photonView.IsMine) {  
-                transform.position = (Vector3) stream.ReceiveNext();
+                if (transformLerp)
+                {
+                    transformLerp.UpdateTransform((Vector3)stream.ReceiveNext(), Quaternion.identity);
+                }
+                else
+                {
+                    transform.position = (Vector3)stream.ReceiveNext();
+                }
             }
         }
     }

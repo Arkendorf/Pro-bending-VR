@@ -1,5 +1,18 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!65 &8997205736110305387
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 946693192355260955}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 310, y: 180, z: 0}
+  m_Center: {x: 0, y: 25, z: 0}
 --- !u!1 &1088012586838425867
 GameObject:
   m_ObjectHideFlags: 0
@@ -723,6 +736,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 8415228722724205045, guid: deec57cb506fe4a3787bd3e96af2032a,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8415228722724205047, guid: deec57cb506fe4a3787bd3e96af2032a,
         type: 3}
