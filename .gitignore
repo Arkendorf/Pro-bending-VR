@@ -58,3 +58,6 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+# Photon
+[Aa]ssets/Photon/PhotonUnityNetworking/Resources/PhotonServerSettings.asset
+
