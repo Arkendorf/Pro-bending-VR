@@ -5,9 +5,6 @@ using Photon.Pun;
 
 public class TransformLerp : MonoBehaviour
 {
-    //[Tooltip("How many updates the position should get a second (such as how many updates per second sent by the server)")]
-    private int UpdatesPerSecond = 12;
-
     // The current transform
     private Vector3 startPosition;
     private Quaternion startRotation;
@@ -20,7 +17,6 @@ public class TransformLerp : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        UpdatesPerSecond = PhotonNetwork.SendRate;
         // Set the transforms to the initial position
         startPosition = transform.position;
         startRotation = transform.rotation;
@@ -34,7 +30,7 @@ public class TransformLerp : MonoBehaviour
         // Update the time since the last update
         timeSinceLastUpdate += Time.deltaTime;
         // Get the predicted fraction of time until the next update
-        float frac = timeSinceLastUpdate / (1f / UpdatesPerSecond);
+        float frac = timeSinceLastUpdate / (1f / PhotonNetwork.SerializationRate);
 
         // Update the objects actual transform to be between the start and end transforms, by frac amount
         transform.position = Vector3.Lerp(startPosition, endPosition, frac);
