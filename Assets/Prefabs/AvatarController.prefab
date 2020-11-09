@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6260592004764288138}
+  - component: {fileID: 2367667099900572312}
   m_Layer: 0
   m_Name: AvatarController
   m_TagString: Untagged
@@ -33,6 +34,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2367667099900572312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6260592004764288141}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d730e51668e002e43880a97dc6ba35c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  controller: {fileID: 0}
 --- !u!1 &6260592005426245000
 GameObject:
   m_ObjectHideFlags: 0
@@ -107,9 +121,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ikActive: 1
   headTarget: {fileID: 0}
-  hipOffset: 0.65
+  hipOffset: {x: 0, y: -0.65, z: -0.1}
   leftHandTarget: {fileID: 0}
   rightHandTarget: {fileID: 0}
+  handOffset: {x: 0.02, y: 0, z: -0.1}
   leftFootTarget: {fileID: 6260592005770995312}
   rightFootTarget: {fileID: 6260592005426245001}
 --- !u!1001 &6260592006233011956

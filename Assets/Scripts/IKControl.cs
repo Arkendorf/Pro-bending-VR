@@ -16,6 +16,7 @@ public class IKControl : MonoBehaviour
     [Space(10)]
     public Transform leftHandTarget;
     public Transform rightHandTarget;
+    public Vector3 handOffset;
     [Space(10)]
     public Transform leftFootTarget;
     public Transform rightFootTarget;
@@ -39,17 +40,19 @@ public class IKControl : MonoBehaviour
                 // Set the look target position, if one has been assigned
                 if (headTarget)
                 {
-                    animator.SetBoneLocalRotation(HumanBodyBones.Neck, headTarget.rotation);
-                    transform.position = headTarget.position + hipOffset;
+                    animator.SetBoneLocalRotation(HumanBodyBones.Neck, Quaternion.Inverse(transform.rotation) * headTarget.rotation);
+                    transform.position = headTarget.position + transform.rotation * hipOffset;
                 }
 
                 if (rightHandTarget)
                 {
-                    SetIK(AvatarIKGoal.RightHand, rightHandTarget.position, rightHandTarget.rotation * Quaternion.Euler(0, 0, -90f));
+                    Quaternion rot = rightHandTarget.rotation * Quaternion.Euler(0, 0, -90f);
+                    SetIK(AvatarIKGoal.RightHand, rightHandTarget.position + rot * handOffset, rot);
                 }
                 if (leftHandTarget)
                 {
-                    SetIK(AvatarIKGoal.LeftHand, leftHandTarget.position, leftHandTarget.rotation * Quaternion.Euler(0, 0, 90f));
+                    Quaternion rot = leftHandTarget.rotation * Quaternion.Euler(0, 0, 90f);
+                    SetIK(AvatarIKGoal.LeftHand, leftHandTarget.position + rot * handOffset, rot);
                 }
 
                 if (rightFootTarget)

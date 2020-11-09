@@ -7,30 +7,40 @@ public class NetworkedPlayer : MonoBehaviourPun, Photon.Pun.IPunObservable
 {
     // test
     // avatar parts
+    public GameObject avatar;
+    public GameObject localAvatar;
+    [Space(10)]
     public GameObject head;
     public GameObject leftHand;
     public GameObject rightHand;
+    public GameObject controller;
+    [Space(10)]
     public GameObject speaker;
+    [Space(10)]
     public TMPro.TMP_Text nickName;
     public GameObject nameCanvas;
+    [Space(10)]
 
     // avatar models (TO COLOR)
-    public GameObject headModel;
-    public GameObject leftHandModel; // right hand and left hand using same material right now
-    public GameObject rightHandModel; // right hand and left hand using same material right now
+    //public GameObject headModel;
+    //public GameObject leftHandModel; // right hand and left hand using same material right now
+    //public GameObject rightHandModel; // right hand and left hand using same material right now
 
     // self hands (TO COLOR)
-    public Material handsMat;
-
-    // tracking transforms
-    public Transform playerHeadLocal;
-    public Transform playerLeftHandLocal;
-    public Transform playerRightHandLocal;
+    //public Material handsMat;
 
     // Get the lerp scripts for all moving objects
+    [Space(10)]
     public TransformLerp headTransformLerp;
     public TransformLerp leftHandTransformLerp;
     public TransformLerp rightHandTransformLerp;
+    public TransformLerp controllerTransformLerp;
+
+    // tracking transforms
+    [HideInInspector] public Transform playerControllerLocal;
+    [HideInInspector] public Transform playerHeadLocal;
+    [HideInInspector] public Transform playerLeftHandLocal;
+    [HideInInspector] public Transform playerRightHandLocal;
 
     void Start ()
     {
@@ -40,23 +50,31 @@ public class NetworkedPlayer : MonoBehaviourPun, Photon.Pun.IPunObservable
         {
             Debug.Log("player is mine");
 
-            Transform playerGlobal = GameObject.Find("MultiplayerSetup/OVRPlayerController").transform;
-            playerHeadLocal = playerGlobal.Find("OVRCameraRig/TrackingSpace/CenterEyeAnchor");
-            playerLeftHandLocal = playerGlobal.Find("OVRCameraRig/TrackingSpace/LeftHandAnchor");
-            playerRightHandLocal = playerGlobal.Find("OVRCameraRig/TrackingSpace/RightHandAnchor");
+            playerControllerLocal = GameObject.Find("MultiplayerSetup/OVRPlayerController").transform;
+            playerHeadLocal = playerControllerLocal.Find("OVRCameraRig/TrackingSpace/CenterEyeAnchor");
+            playerLeftHandLocal = playerControllerLocal.Find("OVRCameraRig/TrackingSpace/LeftHandAnchor");
+            playerRightHandLocal = playerControllerLocal.Find("OVRCameraRig/TrackingSpace/RightHandAnchor");
+
+            IKControl ikControl = localAvatar.GetComponentInChildren<IKControl>();
+            ikControl.headTarget = playerHeadLocal;
+            ikControl.leftHandTarget = playerLeftHandLocal;
+            ikControl.rightHandTarget = playerRightHandLocal;
+            localAvatar.GetComponent<AvatarController>().controller = playerControllerLocal;
 
 
-            this.transform.position = Vector3.zero;
-            this.transform.localPosition = Vector3.zero;
-            this.transform.rotation = Quaternion.Euler(Vector3.zero);
-            this.transform.localRotation = Quaternion.Euler(Vector3.zero);
+            transform.position = Vector3.zero;
+            transform.localPosition = Vector3.zero;
+            transform.rotation = Quaternion.Euler(Vector3.zero);
+            transform.localRotation = Quaternion.Euler(Vector3.zero);
 
             // hide my own avatar to myself
-        
-            head.SetActive(false);
-            leftHand.SetActive(false);
-            rightHand.SetActive(false);
-            nameCanvas.SetActive(false);
+
+            localAvatar.SetActive(true);
+            avatar.SetActive(false);
+            //head.SetActive(false);
+            //leftHand.SetActive(false);
+            //rightHand.SetActive(false);
+            //nameCanvas.SetActive(false);
             //speaker.SetActive(false);
 
 
@@ -65,9 +83,13 @@ public class NetworkedPlayer : MonoBehaviourPun, Photon.Pun.IPunObservable
         }
         else
         {
+            localAvatar.SetActive(false);
+            avatar.SetActive(true);
+
             headTransformLerp = head.GetComponent<TransformLerp>();
             leftHandTransformLerp = leftHand.GetComponent<TransformLerp>();
             rightHandTransformLerp = rightHand.GetComponent<TransformLerp>();
+            controllerTransformLerp = controller.GetComponent<TransformLerp>();
         }     
     }
 
@@ -83,6 +105,9 @@ public class NetworkedPlayer : MonoBehaviourPun, Photon.Pun.IPunObservable
 
             stream.SendNext(playerRightHandLocal.position);
             stream.SendNext(playerRightHandLocal.rotation);
+
+            stream.SendNext(playerControllerLocal.position);
+            stream.SendNext(playerControllerLocal.rotation);
 
             stream.SendNext(nickName.text);
         }
@@ -110,6 +135,16 @@ public class NetworkedPlayer : MonoBehaviourPun, Photon.Pun.IPunObservable
             else {
                 rightHand.transform.localPosition = (Vector3)stream.ReceiveNext();
                 rightHand.transform.localRotation = (Quaternion)stream.ReceiveNext();
+            }
+
+            if (controllerTransformLerp)
+            {
+                controllerTransformLerp.UpdateTransform((Vector3)stream.ReceiveNext(), (Quaternion)stream.ReceiveNext());
+            }
+            else
+            {
+                controller.transform.localPosition = (Vector3)stream.ReceiveNext();
+                controller.transform.localRotation = (Quaternion)stream.ReceiveNext();
             }
 
             string tempname = (string)stream.ReceiveNext();
