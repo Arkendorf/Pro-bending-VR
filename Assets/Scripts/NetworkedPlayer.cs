@@ -42,6 +42,8 @@ public class NetworkedPlayer : MonoBehaviourPun, Photon.Pun.IPunObservable
     [HideInInspector] public Transform playerLeftHandLocal;
     [HideInInspector] public Transform playerRightHandLocal;
 
+    
+
     void Start ()
     {
         Debug.Log("i'm instantiated");
@@ -80,6 +82,8 @@ public class NetworkedPlayer : MonoBehaviourPun, Photon.Pun.IPunObservable
 
             // This is where we set InputManager variable to my Player so that inputManager can affect things here all it does right now is change nickName text
             GameObject.Find("InputManager").GetComponent<InputManager>().myPlayer = this;
+            
+            
         }
         else
         {
@@ -92,6 +96,8 @@ public class NetworkedPlayer : MonoBehaviourPun, Photon.Pun.IPunObservable
             controllerTransformLerp = controller.GetComponent<TransformLerp>();
         }     
     }
+
+   
 
     void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {

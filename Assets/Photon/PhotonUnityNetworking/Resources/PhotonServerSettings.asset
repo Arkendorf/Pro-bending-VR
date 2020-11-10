@@ -42,6 +42,8 @@ MonoBehaviour:
   - RpcShoot
   - setVelocityPUN
   - Destroy
+  - SetAnimatorBool
+  - PlayerHit
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 0

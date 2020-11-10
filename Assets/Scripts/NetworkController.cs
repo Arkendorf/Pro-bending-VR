@@ -8,7 +8,7 @@ public class NetworkController : MonoBehaviourPunCallbacks
 {
     // We want to change this to something because any call to PhotonNetwork.JoinOrCreateRoom will try to join this room name
     public string _room = "My_Custom_Room";
-
+    private Vector3 EntryPoint;
     void Start()
     {
         PhotonNetwork.ConnectUsingSettings();
@@ -67,7 +67,24 @@ public class NetworkController : MonoBehaviourPunCallbacks
         }
         **/
 
-        PhotonNetwork.Instantiate("NetworkedPlayer", Vector3.zero, Quaternion.identity, 0);
+        Vector3 pos1 = new Vector3(-15,-2, 0);
+        Vector3 pos2 = new Vector3(15,-2,0);
+        GameObject MultiSetup = GameObject.Find("MultiplayerSetup/OVRPlayerController");
+        if(PhotonNetwork.CurrentRoom.PlayerCount ==1){
+        MultiSetup.transform.position = pos1;
+        MultiSetup.transform.localPosition = pos1;
+        EntryPoint = pos1;
+        }else{
+        MultiSetup.transform.position = pos2;
+        MultiSetup.transform.localPosition = pos2;
+        EntryPoint = pos2;
+        }
+
+        //if (PhotonNetwork.CurrentRoom.PlayerCount< 3){
+         
+        // GAME OBJECTS ARE NOT SERIALIZABLE
+        
+        PhotonNetwork.Instantiate("NetworkedPlayer", EntryPoint, Quaternion.identity, 0);
 
 
         // Destroying an Object (this could get a little tricky)
