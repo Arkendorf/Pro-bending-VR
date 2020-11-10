@@ -131,6 +131,7 @@ public class NetworkedBender : MonoBehaviourPun
         fired = true; // Note that a projectile has been fired
 
         GameObject elementObj = PhotonNetwork.Instantiate(element, handPos.position, Quaternion.identity);
+        
         // Save a reference to the missile script on the new projectile
         missile = elementObj.GetComponent<Missile>();
         // Set the missile's velocity to move in the direction the arm is reaching (offset between the hand and shoulder)

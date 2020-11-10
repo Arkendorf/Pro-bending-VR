@@ -1,8 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class Hit : MonoBehaviour
+using Photon.Pun;
+public class Hit : MonoBehaviourPun
 {
     
     [HideInInspector]
@@ -21,11 +21,12 @@ public class Hit : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other){
         // The local OVR Controller has been hit. We should do something for just the player and then call a RPC
-        if(other.gameObject.tag == "Missile"){
+        if(other.gameObject.tag != "mine" && other.gameObject.layer == LayerMask.NameToLayer("Missile")){
             // Do something. 
             networkedHealth.LocalPlayerHit(networkedHealth.health - 1);
             audio.Play();
-
+            other.gameObject.GetComponent<PhotonView>().RPC("Collide", RpcTarget.All);
+ 
 
         }
     }
