@@ -31,6 +31,7 @@ public class Missile : MonoBehaviourPun, Photon.Pun.IPunObservable
         if (photonView.IsMine)
         {
             transformLerp.enabled = false;
+            gameObject.tag = "mine";
         }
     }
 
