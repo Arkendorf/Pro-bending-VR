@@ -26,7 +26,7 @@ public class Hit : MonoBehaviourPun
             networkedHealth.LocalPlayerHit(networkedHealth.health - 1);
             audio.Play();
             other.gameObject.GetComponent<PhotonView>().RPC("Collide", RpcTarget.All);
- 
+            // More local Stuff 
 
         }
     }

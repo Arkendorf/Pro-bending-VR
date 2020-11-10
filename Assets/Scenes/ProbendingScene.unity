@@ -1675,6 +1675,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: MultiplayerSetup
       objectReference: {fileID: 0}
+    - target: {fileID: 5433225489254579498, guid: 03dd3e3446681bc489ef446dce2098c6,
+        type: 3}
+      propertyPath: viewIdField
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7313205145704933268, guid: 03dd3e3446681bc489ef446dce2098c6,
+        type: 3}
+      propertyPath: BlueScoreDisplay
+      value: 
+      objectReference: {fileID: 1034214732183087744}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 03dd3e3446681bc489ef446dce2098c6, type: 3}
 --- !u!43 &233914499
@@ -2567,6 +2577,12 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!20 &709495771 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 3698021259131219528, guid: 03dd3e3446681bc489ef446dce2098c6,
+    type: 3}
+  m_PrefabInstance: {fileID: 211603479}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &723367450
 GameObject:
   m_ObjectHideFlags: 0
@@ -7098,6 +7114,18 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Camera
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 709495771}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e58bd2a9379eef8429b3b8b89be109c2, type: 3}
+--- !u!114 &1034214732183087744 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1034214731923370506, guid: e58bd2a9379eef8429b3b8b89be109c2,
+    type: 3}
+  m_PrefabInstance: {fileID: 1034214732183087743}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

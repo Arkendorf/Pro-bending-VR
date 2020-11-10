@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class NetworkController : MonoBehaviourPunCallbacks
 {
     // We want to change this to something because any call to PhotonNetwork.JoinOrCreateRoom will try to join this room name
     public string _room = "My_Custom_Room";
     private Vector3 EntryPoint;
+    public NetworkedHealth networkedHealth;
+    public int blue  = 0;
     void Start()
     {
         PhotonNetwork.ConnectUsingSettings();
@@ -45,6 +48,18 @@ public class NetworkController : MonoBehaviourPunCallbacks
 // This is where we instantiate each player Prefab, currently the prefab is called "NetworkedPlayer" and is a prefab located in Assets/Resources/NetworkedPlayer.prefab
 
 // Loads from resources folder. 
+/*
+    public override void OnCreatedRoom(){
+        // This will only be called when the master creates the room
+        // Lets
+        Hashtable hash = new Hashtable();
+        hash.Add("RedCount", 0);
+        PhotonNetwork.CurrentRoom.SetCustomProperties(hash);
+
+
+
+    }
+    */
     public override void OnJoinedRoom()
     {
        // Each prefab that we instantiate must have a Photon View component. The photon view component will then have Observed Components
@@ -74,16 +89,43 @@ public class NetworkController : MonoBehaviourPunCallbacks
         MultiSetup.transform.position = pos1;
         MultiSetup.transform.localPosition = pos1;
         EntryPoint = pos1;
+        blue = 50;
+
         }else{
         MultiSetup.transform.position = pos2;
         MultiSetup.transform.localPosition = pos2;
         EntryPoint = pos2;
+        blue = 1;
         }
 
         //if (PhotonNetwork.CurrentRoom.PlayerCount< 3){
          
         // GAME OBJECTS ARE NOT SERIALIZABLE
-        
+        /**
+        if (((bool)PhotonNetwork.CurrentRoom.CustomProperties["RedCount"] != true)){
+            Hashtable hash = new Hashtable();
+            hash.Add("RedCount", 20);
+            PhotonNetwork.CurrentRoom.SetCustomProperties(hash);
+
+        }else{
+            Hashtable hash = PhotonNetwork.CurrentRoom.CustomProperties;
+            hash["RedCount"] = (int)hash["RedCount"] + 10;
+            PhotonNetwork.CurrentRoom.SetCustomProperties(hash);
+
+        }
+        **/
+        Hashtable hash = new Hashtable();
+        int RedCount = 0;
+        if(PhotonNetwork.CurrentRoom.CustomProperties["RedCount"] != null){
+            RedCount = (int)PhotonNetwork.CurrentRoom.CustomProperties["RedCount"];
+            
+
+
+        }
+        RedCount++;
+        hash.Add("RedCount", RedCount);
+        PhotonNetwork.CurrentRoom.SetCustomProperties(hash);
+
         PhotonNetwork.Instantiate("NetworkedPlayer", EntryPoint, Quaternion.identity, 0);
 
 
@@ -103,12 +145,30 @@ public class NetworkController : MonoBehaviourPunCallbacks
         // If you want to call method on other clients. Like one player wants to call a method on another you must use a remote Procedure call
         // [PunRPC] see documentation here. https://doc.photonengine.com/en-us/pun/v2/gameplay/rpcsandraiseevent 
         // Might be useful if a player needs to access method on Element prefabs... 
+
+
+
+
+
+        // After a new player has added we must set everyone up with the correct information.
+        // Using the GameManager of the master client, update that and then broadcast this information so that everyone gets it
+
+        
+        //networkedHealth.GetComponent<PhotonView>().RPC("MasterSendsData", RpcTarget.MasterClient, networkedHealth.BlueScore);
+
+
         
 
     }
 
 
-    // 
+    // Need to implement somesort of playerLeftRoom to keep track of who gets to be red team and who gets to be blue team. 
+    // There is OnPlayerLeftRoom() and OnLeftRoom(), i think keeping with style we have started I will do OnLeftRoom()
+    public override void OnLeftRoom(){
+        // CleanUp here
+
+    }
+
 
 }
 
