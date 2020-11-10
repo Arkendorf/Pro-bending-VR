@@ -792,6 +792,18 @@ PrefabInstance:
         type: 3}
       propertyPath: tracker
       value: 
+      objectReference: {fileID: 5975162887358559728}
+    - target: {fileID: 2367667099900572312, guid: 19d4952bb9a405d4badf8dda1d03383d,
+        type: 3}
+      propertyPath: controller
+      value: 
+      objectReference: {fileID: 5975162887358559728}
+    - target: {fileID: 2367667099900572312, guid: 19d4952bb9a405d4badf8dda1d03383d,
+        type: 3}
+      propertyPath: playerPhotonView
+      value: 
+      objectReference: {fileID: 8654498374267844286}
+    - target: {fileID: 6260592004764288138, guid: 19d4952bb9a405d4badf8dda1d03383d,
         type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -964,6 +976,16 @@ PrefabInstance:
       value: AvatarControllerLocal
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d7fd73b098e0d034b9a6f41a5b705398, type: 3}
+--- !u!1 &4107343791732640328 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6260592004764288141, guid: d7fd73b098e0d034b9a6f41a5b705398,
+    type: 3}
+  m_PrefabInstance: {fileID: 8062041641852145349}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &4107343791732640335 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6260592004764288138, guid: d7fd73b098e0d034b9a6f41a5b705398,
     type: 3}
   m_PrefabInstance: {fileID: 8062041641852145349}
   m_PrefabAsset: {fileID: 0}
@@ -972,10 +994,4 @@ Animator:
   m_CorrespondingSourceObject: {fileID: 9027890362761029715, guid: d7fd73b098e0d034b9a6f41a5b705398,
     type: 3}
   m_PrefabInstance: {fileID: 8062041641852145349}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &7049380136564862065 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 100052, guid: d0c255d07fd68f14b94e55d388e7e6bb,
-    type: 3}
-  m_PrefabInstance: {fileID: 7049380136564894373}
   m_PrefabAsset: {fileID: 0}
