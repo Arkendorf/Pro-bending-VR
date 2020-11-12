@@ -10,11 +10,56 @@ public class NetworkController : MonoBehaviourPunCallbacks
     // We want to change this to something because any call to PhotonNetwork.JoinOrCreateRoom will try to join this room name
     public string _room = "My_Custom_Room";
     private Vector3 EntryPoint;
+    private Quaternion EntryRotation;
     public NetworkedHealth networkedHealth;
-    public int blue  = 0;
+    
+    // Define the red, blue, and spectator positions 
+    static Vector3 redSpawn = new Vector3(15,-2, 0);
+    static Vector3 blueSpawn = new Vector3(-15,-2,0);
+
+    // Maybe we could add some randomness to the player spawn if it is a spectator just so everyone doesn't spawn on top of each other Not a priority
+    static Vector3 spectatorSpawn = new Vector3(0,0,0);
+    
+
+    
+
+    static Quaternion redRotation = Quaternion.Euler(0,-90,0);
+    static Quaternion blueRotation = Quaternion.Euler(0,90,0);
+    static Quaternion spectatorRotation = Quaternion.Euler(0,0,0);
+
+
+
+
+    
+    // Each spawn point index corresponds to the teams number
+    Vector3[] spawnPoints = new Vector3[3] {redSpawn, blueSpawn, spectatorSpawn};
+    Quaternion[] spawnRotations = new Quaternion[3]{redRotation, blueRotation, spectatorRotation};
+
+    // Set the max on each team. We will start with 1 v 1
+    int redMax = 1;
+    int blueMax = 1;
+
+        // Initialize the variables we need to setup teams
+
+    Hashtable hashProperties = new Hashtable();
+    int numRedPlayers = 0;
+    int numBluePlayers = 0;
+
+
+    int redScore = 10;
+    int blueScore = 10;
+
+
+    // Team number. Team number is 0 for red 1 for blue and 2 for spectator
+    // Will be set and sent into instantation of player
+    int teamNumber;
+
     void Start()
     {
         PhotonNetwork.ConnectUsingSettings();
+
+
+       
     }
 
     void OnDestroy()
@@ -40,26 +85,10 @@ public class NetworkController : MonoBehaviourPunCallbacks
 
 
 // Is a MonoBehaviourPunCallBack called each time "LoadBalancingClient" Entered a room, no matter if this client created it or simply joined. 
-// We can access existinging players by accessing Room.Players or the number by accessing Room.playerCount which could be helpful for assigning people who join to a locker room 
-// or the stands
-
 // A similar method is OnPlayerEnteredRoom(Player newPlayer). Which works similarily but is called any time a remote player enters the room (so not the host)
-
 // This is where we instantiate each player Prefab, currently the prefab is called "NetworkedPlayer" and is a prefab located in Assets/Resources/NetworkedPlayer.prefab
-
 // Loads from resources folder. 
-/*
-    public override void OnCreatedRoom(){
-        // This will only be called when the master creates the room
-        // Lets
-        Hashtable hash = new Hashtable();
-        hash.Add("RedCount", 0);
-        PhotonNetwork.CurrentRoom.SetCustomProperties(hash);
 
-
-
-    }
-    */
     public override void OnJoinedRoom()
     {
        // Each prefab that we instantiate must have a Photon View component. The photon view component will then have Observed Components
@@ -82,80 +111,85 @@ public class NetworkController : MonoBehaviourPunCallbacks
         }
         **/
 
-        Vector3 pos1 = new Vector3(-15,-2, 0);
-        Vector3 pos2 = new Vector3(15,-2,0);
-        GameObject MultiSetup = GameObject.Find("MultiplayerSetup/OVRPlayerController");
-        if(PhotonNetwork.CurrentRoom.PlayerCount ==1){
-        MultiSetup.transform.position = pos1;
-        MultiSetup.transform.localPosition = pos1;
-        EntryPoint = pos1;
-        blue = 50;
 
-        }else{
-        MultiSetup.transform.position = pos2;
-        MultiSetup.transform.localPosition = pos2;
-        EntryPoint = pos2;
-        blue = 1;
-        }
-
-        //if (PhotonNetwork.CurrentRoom.PlayerCount< 3){
-         
-        // GAME OBJECTS ARE NOT SERIALIZABLE
-        /**
-        if (((bool)PhotonNetwork.CurrentRoom.CustomProperties["RedCount"] != true)){
-            Hashtable hash = new Hashtable();
-            hash.Add("RedCount", 20);
-            PhotonNetwork.CurrentRoom.SetCustomProperties(hash);
-
-        }else{
-            Hashtable hash = PhotonNetwork.CurrentRoom.CustomProperties;
-            hash["RedCount"] = (int)hash["RedCount"] + 10;
-            PhotonNetwork.CurrentRoom.SetCustomProperties(hash);
-
-        }
-        **/
-        Hashtable hash = new Hashtable();
-        int RedCount = 0;
-        if(PhotonNetwork.CurrentRoom.CustomProperties["RedCount"] != null){
-            RedCount = (int)PhotonNetwork.CurrentRoom.CustomProperties["RedCount"];
-            
-
-
-        }
-        RedCount++;
-        hash.Add("RedCount", RedCount);
-        PhotonNetwork.CurrentRoom.SetCustomProperties(hash);
-
-        PhotonNetwork.Instantiate("NetworkedPlayer", EntryPoint, Quaternion.identity, 0);
-
-
-        // Destroying an Object (this could get a little tricky)
-        /**
-        If you want to use PhotonNetwork.Destroy(Gameobject) but are not the master client (server) you need request an ownership transfer so that you now own the object and then can destroy
-        See documentation here 
-        https://doc.photonengine.com/en-us/pun/v1/demos-and-tutorials/package-demos/ownership-transfer
-
-        see forum answer here 
-        https://answers.unity.com/questions/1451821/how-to-use-photonnetworkdestroy-if-i-am-not-the-ma.html 
-
-        Not sure if we will run into this. I guess hypothetically a ball or element or whatever can just know when it needs to destroy itself and we should be good
-
-        **/
-
-        // If you want to call method on other clients. Like one player wants to call a method on another you must use a remote Procedure call
-        // [PunRPC] see documentation here. https://doc.photonengine.com/en-us/pun/v2/gameplay/rpcsandraiseevent 
-        // Might be useful if a player needs to access method on Element prefabs... 
-
-
-
-
-
-        // After a new player has added we must set everyone up with the correct information.
-        // Using the GameManager of the master client, update that and then broadcast this information so that everyone gets it
 
         
-        //networkedHealth.GetComponent<PhotonView>().RPC("MasterSendsData", RpcTarget.MasterClient, networkedHealth.BlueScore);
+        // Pull Current values from the room properties
+        // My intuition is that we only need to check if one property is null because whoever joined first will set everything to not null
 
+        if(PhotonNetwork.CurrentRoom.CustomProperties["numRedPlayers"] != null){
+            this.numRedPlayers = (int)PhotonNetwork.CurrentRoom.CustomProperties["numRedPlayers"];
+            this.numBluePlayers = (int)PhotonNetwork.CurrentRoom.CustomProperties["numBluePlayers"];
+
+            // Not sure of the best way to do this but we need to setup the score. If this ends up being the first player to connect we need to setup new entries. Seems a little inefficient considering score will never actually change
+
+            this.redScore = (int)PhotonNetwork.CurrentRoom.CustomProperties["redScore"];
+            this.blueScore = (int)PhotonNetwork.CurrentRoom.CustomProperties["blueScore"];
+            
+        }
+
+
+        // Update properities and set this new player's team int;
+        // Probably an unecessary amount of logic here but just keeping it reallly broad in case we ever want to move to 3v3 
+        // This will alternate players
+        if (this.numRedPlayers  > this.numBluePlayers){
+            if (this.numBluePlayers < this.blueMax){
+                // Assign this player team number 1
+                this.teamNumber = 1;
+                this.numBluePlayers++;
+            }else{
+                // Make this player a spectator
+                this.teamNumber = 2;
+            }
+
+        } // If we make it here there are less or equal redPlayers
+        else{
+            if(this.numRedPlayers < this.redMax){
+                this.teamNumber = 0;
+                this.numRedPlayers++;
+            }else{
+                this.teamNumber = 2;
+            }
+
+
+        }
+
+       
+
+
+       // rebuild or build for the first time
+        this.hashProperties.Add("numRedPlayers", this.numRedPlayers);
+        this.hashProperties.Add("numBluePlayers", this.numBluePlayers);
+        this.hashProperties.Add("redScore", this.redScore);
+        this.hashProperties.Add("blueScore", this.blueScore);
+        PhotonNetwork.CurrentRoom.SetCustomProperties(this.hashProperties);
+    
+
+        // Here is where we set up the position of where the player will spawn based on their team
+        
+        GameObject MultiSetup = GameObject.Find("MultiplayerSetup/OVRPlayerController");
+        EntryPoint = this.spawnPoints[this.teamNumber];
+        MultiSetup.transform.position = this.EntryPoint;
+        MultiSetup.transform.localPosition = this.EntryPoint;
+
+        
+        EntryRotation = this.spawnRotations[this.teamNumber];
+        MultiSetup.transform.rotation = this.EntryRotation;
+        MultiSetup.transform.localRotation = this.EntryRotation;
+        
+       
+    
+
+        // Setup data initialization here
+
+        object[] myCustomInitData = new object[1];
+        myCustomInitData[0]=this.teamNumber; 
+        //PhotonNetwork.Instantiate("MyPrefabName", new Vector3(0, 0, 0), Quaternion.identity, 0, myCustomInitData);
+
+        PhotonNetwork.Instantiate("NetworkedPlayer", EntryPoint, EntryRotation, 0, myCustomInitData);
+
+
+      
 
         
 
@@ -163,11 +197,44 @@ public class NetworkController : MonoBehaviourPunCallbacks
 
 
     // Need to implement somesort of playerLeftRoom to keep track of who gets to be red team and who gets to be blue team. 
-    // There is OnPlayerLeftRoom() and OnLeftRoom(), i think keeping with style we have started I will do OnLeftRoom()
+    // Can't change jain the room properties if you've left
     public override void OnLeftRoom(){
-        // CleanUp here
+        // No way we leave a room without the properities being instantiated already so dont need to make any checks for null 
+        // Create a clone 
+        this.hashProperties = new Hashtable();
+
+
+        this.numRedPlayers = (int)PhotonNetwork.CurrentRoom.CustomProperties["numRedPlayers"];
+        this.numBluePlayers = (int)PhotonNetwork.CurrentRoom.CustomProperties["numBluePlayers"];
+
+            // Not sure of the best way to do this but we need to setup the score. If this ends up being the first player to connect we need to setup new entries. Seems a little inefficient considering score will never actually change
+
+        this.redScore = (int)PhotonNetwork.CurrentRoom.CustomProperties["redScore"];
+        this.blueScore = (int)PhotonNetwork.CurrentRoom.CustomProperties["blueScore"];
+
+        if (this.teamNumber == 0){
+            // The problem is that we can only use setCustomProperties I beleive, Cant just directly manipulate the hashtable so we have to do this funkyness
+            // 
+            this.redScore--;
+
+            
+
+        }else if (this.teamNumber ==1){
+            this.blueScore--;
+
+        }
+        // Reset the room properities before we leave 
+        this.hashProperties.Add("numRedPlayers", this.numRedPlayers);
+        this.hashProperties.Add("numBluePlayers", this.numBluePlayers);
+        this.hashProperties.Add("redScore", this.redScore);
+        this.hashProperties.Add("blueScore", this.blueScore);
+        PhotonNetwork.CurrentRoom.SetCustomProperties(this.hashProperties);
+        
+
 
     }
+
+    
 
 
 }

@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour
     // We need reference to this versions networkedHealth. We want to be able to get the health from here so we can update our scoreboard. 
     [HideInInspector] public NetworkedHealth networkedHealth;
     // Speaking of scoreboard lets grab two references to text to update the red and blue score
-    //public TextMeshProUGUI RedScoreDisplay;
+    public TextMeshProUGUI RedScoreDisplay;
     public TextMeshProUGUI BlueScoreDisplay;
 
 
