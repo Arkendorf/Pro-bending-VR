@@ -5,35 +5,45 @@ using Photon.Pun;
 
 public class Collision : MonoBehaviourPun
 {
-    public string collideEffect;
+    public GameObject collideEffect;
 
     private Missile missile;
+    private Collider collider;
+    private ParticleSystem particles;
     // Start is called before the first frame update
     void Start()
     {
         missile = GetComponent<Missile>();
+        collider = GetComponent<Collider>();
+        particles = GetComponentInChildren<ParticleSystem>();
     }
 
-
-    
+    void Update()
+    {
+        // When particle system is ended, destroy this missile
+        if (particles.isStopped)
+        {
+            PhotonNetwork.Destroy(gameObject);
+        }
+    }
 
     [PunRPC]
     public void Collide(){
-            // TODO: fix instantiation of puff effect
-            //PhotonNetwork.Instantiate(collideEffect, transform.position, Quaternion.LookRotation(-missile.velocity));
-            // Destroy the missile on all clients
+        // TODO: fix instantiation of puff effect
+        Instantiate(collideEffect, transform.position, Quaternion.LookRotation(-missile.velocity));
+        // Disable collider to prevent more collisions from the same particle while it is deleting
+        collider.enabled = false;
+        // Stop particle system
         if(photonView.IsMine){
-            PhotonNetwork.Destroy(gameObject);
+            particles.Stop();
         }
-
-
     }
+
     private void OnTriggerEnter(Collider other)
     {
            // Don't collide with the player who instantiated this missile
         if (gameObject.tag!="mine" || (other.tag != "playerController" && other.tag != "MainCamera") ){
             GetComponent<PhotonView>().RPC("Collide", RpcTarget.All);
-
         }   
     }
 }
