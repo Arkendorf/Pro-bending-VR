@@ -49,6 +49,12 @@ public class NetworkController : MonoBehaviourPunCallbacks
     int redScore = 10;
     int blueScore = 10;
 
+    int ReadyToPlay = 0;
+
+    GameObject MultiSetup;
+    //GameObject GameManager;
+    Animator blackScreen;
+     
 
     // Team number. Team number is 0 for red 1 for blue and 2 for spectator
     // Will be set and sent into instantation of player
@@ -57,6 +63,7 @@ public class NetworkController : MonoBehaviourPunCallbacks
     void Start()
     {
         PhotonNetwork.ConnectUsingSettings();
+        this.blackScreen = GameObject.Find("MultiplayerSetup/OVRPlayerController/OVRCameraRig/TrackingSpace/CenterEyeAnchor/Blocker/Cube").GetComponent<Animator>();
 
 
        
@@ -113,7 +120,8 @@ public class NetworkController : MonoBehaviourPunCallbacks
 
 
 
-        
+        this.MultiSetup = GameObject.Find("MultiplayerSetup/OVRPlayerController");
+        //GameObject GameManager = GameObject.Find("Multiplayer/GameManager");
         // Pull Current values from the room properties
         // My intuition is that we only need to check if one property is null because whoever joined first will set everything to not null
 
@@ -125,6 +133,7 @@ public class NetworkController : MonoBehaviourPunCallbacks
 
             this.redScore = (int)PhotonNetwork.CurrentRoom.CustomProperties["redScore"];
             this.blueScore = (int)PhotonNetwork.CurrentRoom.CustomProperties["blueScore"];
+            this.ReadyToPlay = (int)PhotonNetwork.CurrentRoom.CustomProperties["readyToPlay"];
             
         }
 
@@ -162,20 +171,21 @@ public class NetworkController : MonoBehaviourPunCallbacks
         this.hashProperties.Add("numBluePlayers", this.numBluePlayers);
         this.hashProperties.Add("redScore", this.redScore);
         this.hashProperties.Add("blueScore", this.blueScore);
+        this.hashProperties.Add("readyToPlay", this.ReadyToPlay);
         PhotonNetwork.CurrentRoom.SetCustomProperties(this.hashProperties);
     
 
         // Here is where we set up the position of where the player will spawn based on their team
         
-        GameObject MultiSetup = GameObject.Find("MultiplayerSetup/OVRPlayerController");
+        
         EntryPoint = this.spawnPoints[this.teamNumber];
-        MultiSetup.transform.position = this.EntryPoint;
-        MultiSetup.transform.localPosition = this.EntryPoint;
+        this.MultiSetup.transform.position = this.EntryPoint;
+        this.MultiSetup.transform.localPosition = this.EntryPoint;
 
         
         EntryRotation = this.spawnRotations[this.teamNumber];
-        MultiSetup.transform.rotation = this.EntryRotation;
-        MultiSetup.transform.localRotation = this.EntryRotation;
+        this.MultiSetup.transform.rotation = this.EntryRotation;
+        this.MultiSetup.transform.localRotation = this.EntryRotation;
         
        
     
@@ -187,8 +197,7 @@ public class NetworkController : MonoBehaviourPunCallbacks
         //PhotonNetwork.Instantiate("MyPrefabName", new Vector3(0, 0, 0), Quaternion.identity, 0, myCustomInitData);
 
         PhotonNetwork.Instantiate("NetworkedPlayer", EntryPoint, EntryRotation, 0, myCustomInitData);
-
-
+       this.blackScreen.SetBool("ShouldFade", true);
       
 
         
@@ -228,6 +237,7 @@ public class NetworkController : MonoBehaviourPunCallbacks
         this.hashProperties.Add("numBluePlayers", this.numBluePlayers);
         this.hashProperties.Add("redScore", this.redScore);
         this.hashProperties.Add("blueScore", this.blueScore);
+        this.hashProperties.Add("readyToPlay", 0);
         PhotonNetwork.CurrentRoom.SetCustomProperties(this.hashProperties);
         
 

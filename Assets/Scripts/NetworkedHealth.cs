@@ -11,10 +11,6 @@ public class NetworkedHealth : MonoBehaviourPun
     public int health =10;
     public AudioSource audio;
 
-
-    
-
-
     // Grab the GameManager
     public GameManager gameManager;
 
@@ -25,25 +21,24 @@ public class NetworkedHealth : MonoBehaviourPun
     void Start()
     {
     gameManager = GameObject.Find("MultiplayerSetup/GameManager").GetComponent<GameManager>();
+    
+    
     if(photonView.IsMine){
-
+        
         GetComponent<NetworkedPlayer>().playerHeadLocal.GetComponent<Hit>().networkedHealth = this;   
-
+        
         
         GameObject.Find("MultiplayerSetup/NetworkController").GetComponent<NetworkController>().networkedHealth = this;
         GameObject.Find("MultiplayerSetup/GameManager").GetComponent<GameManager>().networkedHealth = this;
+        
 
 
         //Grab my team number
         this.teamNumber = (int)photonView.InstantiationData[0];
 
-
-        // Update the scoreboard.. does not work here.. Not positive why... 
-        int redScore = (int)PhotonNetwork.CurrentRoom.CustomProperties["redScore"];
-        gameManager.RedScoreDisplay.SetText(redScore.ToString());
-        //gameManager.RedScoreDisplay.SetText("Help");
-        int blueScore = (int)PhotonNetwork.CurrentRoom.CustomProperties["blueScore"];
-        gameManager.BlueScoreDisplay.SetText(blueScore.ToString());
+        // Doesn't run for master client for some reason. 
+        
+        
         
     }
     }
@@ -51,62 +46,77 @@ public class NetworkedHealth : MonoBehaviourPun
     // Update is called once per frame
     void Update()
     {
-        //gameManager.RedScoreDisplay.SetText("Help");
+        // just here for testing
+        //UpdateScoreBoard();
      
         
     }
 
     public void LocalPlayerHit(int health){
         // player that just got hit updates their own health
+        
         this.health = health;
 
-
-        // This player should update the customProperties for everyone else. 
-        Hashtable hashProperties = new Hashtable();
-
+        Hashtable hash = new Hashtable();
 
         int numRedPlayers = (int)PhotonNetwork.CurrentRoom.CustomProperties["numRedPlayers"];
-        int numBluePlayers = (int)PhotonNetwork.CurrentRoom.CustomProperties["numBluePlayers"];
-
-            // Not sure of the best way to do this but we need to setup the score. If this ends up being the first player to connect we need to setup new entries. Seems a little inefficient considering score will never actually change
-
+        int numBluePlayers = (int)PhotonNetwork.CurrentRoom.CustomProperties["numBluePlayers"];  
         int redScore = (int)PhotonNetwork.CurrentRoom.CustomProperties["redScore"];
         int blueScore = (int)PhotonNetwork.CurrentRoom.CustomProperties["blueScore"];
+        int ReadyToPlay = (int)PhotonNetwork.CurrentRoom.CustomProperties["readyToPlay"];
+
+
+
+        
+      
 
         if (this.teamNumber == 0){
-            // The problem is that we can only use setCustomProperties I beleive, Cant just directly manipulate the hashtable so we have to do this funkyness
-            // 
-            redScore--;
-           
-            
-
+           //changeProperties("redScore", -1);
+           redScore--;
         }else if (this.teamNumber ==1){
+            //changeProperties("blueScore", -1);
             blueScore--;
             
-            
-
         }
 
-        hashProperties.Add("numRedPlayers", numRedPlayers);
-        hashProperties.Add("numBluePlayers", numBluePlayers);
-        hashProperties.Add("redScore", redScore);
-        hashProperties.Add("blueScore", blueScore);
-        // Reset the room properities to update the score
-        PhotonNetwork.CurrentRoom.SetCustomProperties(hashProperties);
+
+
+        hash.Add("numRedPlayers", numRedPlayers);
+        hash.Add("numBluePlayers", numBluePlayers);
+        hash.Add("redScore", redScore);
+        hash.Add("blueScore", blueScore);
+        hash.Add("readyToPlay", ReadyToPlay);
+        
+        
+        PhotonNetwork.CurrentRoom.SetCustomProperties(hash);
 
 
         //Update the scoreboard for yourself
-    
+        
+        //UpdateScoreBoard();
         gameManager.RedScoreDisplay.SetText(redScore.ToString());
         gameManager.BlueScoreDisplay.SetText(blueScore.ToString());
-
 
 
         // Everyone else gets this called
         GetComponent<PhotonView>().RPC("PlayerHit", RpcTarget.Others, health, redScore, blueScore);
         Debug.Log(health);
         
+        
          
+    }
+
+    public void UpdateScoreBoard(){
+        
+        int redScore = (int)PhotonNetwork.CurrentRoom.CustomProperties["redScore"];
+       int blueScore = (int)PhotonNetwork.CurrentRoom.CustomProperties["blueScore"];
+        
+        
+        gameManager.RedScoreDisplay.SetText(redScore.ToString());
+        gameManager.BlueScoreDisplay.SetText(blueScore.ToString());
+        
+       
+
     }
     [PunRPC]
     public void PlayerHit(int health, int redScore, int blueScore){
@@ -115,22 +125,49 @@ public class NetworkedHealth : MonoBehaviourPun
         // Everyone else hears this audio
         audio.Play();
 
-        // Everyone else should update their scoreboards too
-        //int redScore = (int)PhotonNetwork.CurrentRoom.CustomProperties["redScore"];
-        
         gameManager.RedScoreDisplay.SetText(redScore.ToString());
-        //int blueScore = (int)PhotonNetwork.CurrentRoom.CustomProperties["blueScore"];
         gameManager.BlueScoreDisplay.SetText(blueScore.ToString());
+        // Everyone else should update their scoreboards too
+        //UpdateScoreBoard();
+
 
 
     }
+    
+    public void changeProperties(string key, int value){
+        // is this necessary? not sure but i know every person has a local copy of gamemanager
+        //if (photonView.IsMine){
+        Hashtable hash = new Hashtable();
+        // Have to rebuild our hash table unfortunately 
+        int numRedPlayers = (int)PhotonNetwork.CurrentRoom.CustomProperties["numRedPlayers"];
+        int numBluePlayers = (int)PhotonNetwork.CurrentRoom.CustomProperties["numBluePlayers"];  
+        int redScore = (int)PhotonNetwork.CurrentRoom.CustomProperties["redScore"];
+        int blueScore = (int)PhotonNetwork.CurrentRoom.CustomProperties["blueScore"];
+        int ReadyToPlay = (int)PhotonNetwork.CurrentRoom.CustomProperties["readyToPlay"];
 
 
 
+        hash.Add("numRedPlayers", numRedPlayers);
+        hash.Add("numBluePlayers", numBluePlayers);
+        hash.Add("redScore", redScore);
+        hash.Add("blueScore", blueScore);
+        hash.Add("readyToPlay", ReadyToPlay);
+
+        hash[key] = (int)hash[key] + value;
+
+
+        PhotonNetwork.CurrentRoom.SetCustomProperties(hash);
+
+
+
+    }
     
 
-
-    
-
-    
+    public int GetValue(string key){
+        return (int)PhotonNetwork.CurrentRoom.CustomProperties[key];
+    }
 }
+
+
+
+    
