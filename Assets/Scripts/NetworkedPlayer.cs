@@ -47,13 +47,18 @@ public class NetworkedPlayer : MonoBehaviourPun, Photon.Pun.IPunObservable
     void Start ()
     {
         Debug.Log("i'm instantiated");
-
+        // Grab my team number!
+        int teamNumber = (int)photonView.InstantiationData[0];
+        // Decide on avatar model based on color
         if (photonView.IsMine)
         {
             Debug.Log("player is mine");
 
             // Get necessary parts of the player controller
             playerControllerLocal = GameObject.Find("MultiplayerSetup/OVRPlayerController").transform;
+            if(teamNumber ==1 || teamNumber == 0){
+                GameObject.Find("MultiplayerSetup/OVRPlayerController").GetComponent<OVRPlayerController>().EnableLinearMovement = true;
+            }
             playerHeadLocal = playerControllerLocal.Find("OVRCameraRig/TrackingSpace/CenterEyeAnchor");
             playerLeftHandLocal = playerControllerLocal.Find("OVRCameraRig/TrackingSpace/LeftHandAnchor");
             playerRightHandLocal = playerControllerLocal.Find("OVRCameraRig/TrackingSpace/RightHandAnchor");
@@ -71,7 +76,7 @@ public class NetworkedPlayer : MonoBehaviourPun, Photon.Pun.IPunObservable
             transform.rotation = Quaternion.Euler(Vector3.zero);
             transform.localRotation = Quaternion.Euler(Vector3.zero);
 
-            // hide my own avatar to myself
+            // hide my own avatar to myself            
             localAvatar.SetActive(true);
             avatar.SetActive(false);
 
@@ -79,9 +84,7 @@ public class NetworkedPlayer : MonoBehaviourPun, Photon.Pun.IPunObservable
             nameCanvas.SetActive(false);
 
             // This is where we set InputManager variable to my Player so that inputManager can affect things here all it does right now is change nickName text
-            GameObject.Find("InputManager").GetComponent<InputManager>().myPlayer = this;
-            
-            
+            GameObject.Find("InputManager").GetComponent<InputManager>().myPlayer = this;               
         }
         else
         {

@@ -42,6 +42,8 @@ public class Collision : MonoBehaviourPun
     private void OnTriggerEnter(Collider other)
     {
            // Don't collide with the player who instantiated this missile
+           // Missile if we instantiated it will be tagged mine
+           // Player controller on the ovr will be tagged playerController, and centerEyeAnchor where we currently have the collider box will be tagged MainCamera
         if (gameObject.tag!="mine" || (other.tag != "playerController" && other.tag != "MainCamera") ){
             GetComponent<PhotonView>().RPC("Collide", RpcTarget.All);
         }   
