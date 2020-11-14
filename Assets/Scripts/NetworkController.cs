@@ -63,10 +63,7 @@ public class NetworkController : MonoBehaviourPunCallbacks
     void Start()
     {
         PhotonNetwork.ConnectUsingSettings();
-        this.blackScreen = GameObject.Find("MultiplayerSetup/OVRPlayerController/OVRCameraRig/TrackingSpace/CenterEyeAnchor/Blocker/Cube").GetComponent<Animator>();
-
-
-       
+        this.blackScreen = GameObject.Find("MultiplayerSetup/OVRPlayerController/OVRCameraRig/TrackingSpace/CenterEyeAnchor/Blocker/Cube").GetComponent<Animator>();  
     }
 
     void OnDestroy()

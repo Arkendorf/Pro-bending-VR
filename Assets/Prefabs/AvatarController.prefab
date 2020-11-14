@@ -47,8 +47,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 0}
-  leftGripButton: 24576
-  rightGripButton: 6291456
 --- !u!1 &6260592005426245000
 GameObject:
   m_ObjectHideFlags: 0
@@ -190,6 +188,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -1668179379099034930, guid: 207f75c683394f048bfc88ee93b66a47,
+        type: 3}
+      propertyPath: m_UpdateWhenOffscreen
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -668806189346651729, guid: 207f75c683394f048bfc88ee93b66a47,
         type: 3}
