@@ -21,12 +21,18 @@ public class FireworksSound : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Play Cheering sounds
+        if (!audioSource.isPlaying) {
+            audioSource.Play();
+        }
+
+        // Play fireworks sounds
         var count = Rocket.particleCount;
         if (count < numParticles) {
-            audioSource.PlayOneShot(FireworkDeath);
+            audioSource.PlayOneShot(FireworkDeath, 1f);
         }
         else if (count > numParticles) {
-            audioSource.PlayOneShot(FireworkBorn);
+            audioSource.PlayOneShot(FireworkBorn, 1f);
         }
         numParticles = count;
     }
