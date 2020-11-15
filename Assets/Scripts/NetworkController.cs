@@ -146,7 +146,7 @@ public class NetworkController : MonoBehaviourPunCallbacks
         // Probably an unecessary amount of logic here but just keeping it reallly broad in case we ever want to move to 3v3 
         // This will alternate players
         if (this.numRedPlayers  > this.numBluePlayers){
-            if (this.numBluePlayers < this.blueMax || PhotonNetwork.CurrentRoom.PlayerCount <2){
+            if (this.numBluePlayers < this.blueMax || PhotonNetwork.CurrentRoom.PlayerCount <3){
                 // Assign this player team number 1
                 this.teamNumber = 1;
                 this.numBluePlayers++;
@@ -157,7 +157,7 @@ public class NetworkController : MonoBehaviourPunCallbacks
 
         } // If we make it here there are less or equal redPlayers
         else{
-            if(this.numRedPlayers < this.redMax || PhotonNetwork.CurrentRoom.PlayerCount <2){
+            if(this.numRedPlayers < this.redMax || PhotonNetwork.CurrentRoom.PlayerCount <3){
                 this.teamNumber = 0;
                 this.numRedPlayers++;
             }else{
