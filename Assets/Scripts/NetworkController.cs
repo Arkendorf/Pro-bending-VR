@@ -14,11 +14,11 @@ public class NetworkController : MonoBehaviourPunCallbacks
     public NetworkedHealth networkedHealth;
     
     // Define the red, blue, and spectator positions 
-    static Vector3 redSpawn = new Vector3(15,-2, 0);
-    static Vector3 blueSpawn = new Vector3(-15,-2,0);
+    static Vector3 redSpawn = new Vector3(8,-3.8f, 0);
+    static Vector3 blueSpawn = new Vector3(-8,-3.8f,0);
 
     // Maybe we could add some randomness to the player spawn if it is a spectator just so everyone doesn't spawn on top of each other Not a priority
-    static Vector3 spectatorSpawn = new Vector3(0,0,0);
+    static Vector3 spectatorSpawn = new Vector3(0,-3.8f,0);
     
 
     
@@ -51,7 +51,11 @@ public class NetworkController : MonoBehaviourPunCallbacks
 
     int ReadyToPlay = 0;
 
+    
+
     GameObject MultiSetup;
+    GameObject OVRplayer;
+    GameObject Wall;
     //GameObject GameManager;
     Animator blackScreen;
      
@@ -64,6 +68,7 @@ public class NetworkController : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.ConnectUsingSettings();
         this.blackScreen = GameObject.Find("MultiplayerSetup/OVRPlayerController/OVRCameraRig/TrackingSpace/CenterEyeAnchor/Blocker/Cube").GetComponent<Animator>();  
+        this.Wall = GameObject.Find("StartWall");
     }
 
     void OnDestroy()
@@ -117,7 +122,8 @@ public class NetworkController : MonoBehaviourPunCallbacks
 
 
 
-        this.MultiSetup = GameObject.Find("MultiplayerSetup/OVRPlayerController");
+        this.OVRplayer = GameObject.Find("MultiplayerSetup/OVRPlayerController");
+        this.MultiSetup = GameObject.Find("MultiplayerSetup");
         //GameObject GameManager = GameObject.Find("Multiplayer/GameManager");
         // Pull Current values from the room properties
         // My intuition is that we only need to check if one property is null because whoever joined first will set everything to not null
@@ -132,6 +138,7 @@ public class NetworkController : MonoBehaviourPunCallbacks
             this.blueScore = (int)PhotonNetwork.CurrentRoom.CustomProperties["blueScore"];
             this.ReadyToPlay = (int)PhotonNetwork.CurrentRoom.CustomProperties["readyToPlay"];
             
+            
         }
 
 
@@ -139,7 +146,7 @@ public class NetworkController : MonoBehaviourPunCallbacks
         // Probably an unecessary amount of logic here but just keeping it reallly broad in case we ever want to move to 3v3 
         // This will alternate players
         if (this.numRedPlayers  > this.numBluePlayers){
-            if (this.numBluePlayers < this.blueMax){
+            if (this.numBluePlayers < this.blueMax || PhotonNetwork.CurrentRoom.PlayerCount <2){
                 // Assign this player team number 1
                 this.teamNumber = 1;
                 this.numBluePlayers++;
@@ -150,7 +157,7 @@ public class NetworkController : MonoBehaviourPunCallbacks
 
         } // If we make it here there are less or equal redPlayers
         else{
-            if(this.numRedPlayers < this.redMax){
+            if(this.numRedPlayers < this.redMax || PhotonNetwork.CurrentRoom.PlayerCount <2){
                 this.teamNumber = 0;
                 this.numRedPlayers++;
             }else{
@@ -159,6 +166,12 @@ public class NetworkController : MonoBehaviourPunCallbacks
 
 
         }
+
+        
+        if (this.ReadyToPlay >= 2){
+            this.Wall.SetActive(false);
+        }
+        
 
        
 
@@ -174,15 +187,18 @@ public class NetworkController : MonoBehaviourPunCallbacks
 
         // Here is where we set up the position of where the player will spawn based on their team
         
-        
+    
+        this.MultiSetup.transform.position = Vector3.zero;
+        this.MultiSetup.transform.localPosition = Vector3.zero;
+
         EntryPoint = this.spawnPoints[this.teamNumber];
-        this.MultiSetup.transform.position = this.EntryPoint;
-        this.MultiSetup.transform.localPosition = this.EntryPoint;
+        this.OVRplayer.transform.position = this.EntryPoint;
+        this.OVRplayer.transform.localPosition = this.EntryPoint;
 
         
         EntryRotation = this.spawnRotations[this.teamNumber];
-        this.MultiSetup.transform.rotation = this.EntryRotation;
-        this.MultiSetup.transform.localRotation = this.EntryRotation;
+        this.OVRplayer.transform.rotation = this.EntryRotation;
+        this.OVRplayer.transform.localRotation = this.EntryRotation;
         
        
     
@@ -217,6 +233,7 @@ public class NetworkController : MonoBehaviourPunCallbacks
 
         this.redScore = (int)PhotonNetwork.CurrentRoom.CustomProperties["redScore"];
         this.blueScore = (int)PhotonNetwork.CurrentRoom.CustomProperties["blueScore"];
+        this.ReadyToPlay = (int)PhotonNetwork.CurrentRoom.CustomProperties["readyToPlay"];
 
         if (this.teamNumber == 0){
             // The problem is that we can only use setCustomProperties I beleive, Cant just directly manipulate the hashtable so we have to do this funkyness
@@ -234,7 +251,8 @@ public class NetworkController : MonoBehaviourPunCallbacks
         this.hashProperties.Add("numBluePlayers", this.numBluePlayers);
         this.hashProperties.Add("redScore", this.redScore);
         this.hashProperties.Add("blueScore", this.blueScore);
-        this.hashProperties.Add("readyToPlay", 0);
+        this.hashProperties.Add("readyToPlay", this.ReadyToPlay);
+        
         PhotonNetwork.CurrentRoom.SetCustomProperties(this.hashProperties);
         
 
