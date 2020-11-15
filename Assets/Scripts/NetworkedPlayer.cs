@@ -20,6 +20,13 @@ public class NetworkedPlayer : MonoBehaviourPun, Photon.Pun.IPunObservable
     public TMPro.TMP_Text nickName;
     public GameObject nameCanvas;
     [Space(10)]
+    public Material blueTeamMaterial;
+    public string blueTeamElement = "BlueFire";
+    [Space(10)]
+    public Material redTeamMaterial;
+    public string redTeamElement = "Fire";
+    [Space(10)]
+    public Material spectatorMaterial;
 
     // avatar models (TO COLOR)
     //public GameObject headModel;
@@ -56,9 +63,12 @@ public class NetworkedPlayer : MonoBehaviourPun, Photon.Pun.IPunObservable
 
             // Get necessary parts of the player controller
             playerControllerLocal = GameObject.Find("MultiplayerSetup/OVRPlayerController").transform;
-            if(teamNumber ==1 || teamNumber == 0){
+
+            if (teamNumber == 1 || teamNumber == 0) {
+                // TODO: Set this to false
                 GameObject.Find("MultiplayerSetup/OVRPlayerController").GetComponent<OVRPlayerController>().EnableLinearMovement = true;
             }
+
             playerHeadLocal = playerControllerLocal.Find("OVRCameraRig/TrackingSpace/CenterEyeAnchor");
             playerLeftHandLocal = playerControllerLocal.Find("OVRCameraRig/TrackingSpace/LeftHandAnchor");
             playerRightHandLocal = playerControllerLocal.Find("OVRCameraRig/TrackingSpace/RightHandAnchor");
@@ -95,10 +105,39 @@ public class NetworkedPlayer : MonoBehaviourPun, Photon.Pun.IPunObservable
             leftHandTransformLerp = leftHand.GetComponent<TransformLerp>();
             rightHandTransformLerp = rightHand.GetComponent<TransformLerp>();
             controllerTransformLerp = controller.GetComponent<TransformLerp>();
-        }     
+        }
+
+
+        // Set element and material
+        NetworkedBender[] networkedBenders = GetComponents<NetworkedBender>();
+        if (teamNumber == 0)
+        {
+            GetComponentInChildren<Renderer>().material = redTeamMaterial;
+            foreach (NetworkedBender networkedBender in networkedBenders)
+            {
+                networkedBender.element = redTeamElement;
+            }
+        }
+        else if (teamNumber == 1)
+        {
+            GetComponentInChildren<Renderer>().material = blueTeamMaterial;
+            foreach (NetworkedBender networkedBender in networkedBenders)
+            {
+                networkedBender.element = blueTeamElement;
+            }
+        }
+        else
+        {
+            GetComponentInChildren<Renderer>().material = spectatorMaterial;
+            // Disable bending
+            foreach (NetworkedBender networkedBender in networkedBenders)
+            {
+                networkedBender.enabled = false;
+            }
+        }
     }
 
-   
+
 
     void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {

@@ -10,6 +10,10 @@ public class Collision : MonoBehaviourPun
     private Missile missile;
     private Collider collider;
     private ParticleSystem particles;
+
+    private Vector3 oldPos;
+    private Quaternion puffRotation;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,22 +24,26 @@ public class Collision : MonoBehaviourPun
 
     void Update()
     {
+        puffRotation = Quaternion.LookRotation(oldPos - transform.position);
+        oldPos = transform.position;
+
         // When particle system is ended, destroy this missile
         if (particles.isStopped)
         {
             PhotonNetwork.Destroy(gameObject);
         }
+
     }
 
     [PunRPC]
     public void Collide(){
-        // TODO: fix instantiation of puff effect
-        Instantiate(collideEffect, transform.position, Quaternion.LookRotation(-missile.velocity));
+        Instantiate(collideEffect, transform.position, puffRotation);
         // Disable collider to prevent more collisions from the same particle while it is deleting
         collider.enabled = false;
         // Stop particle system
         if(photonView.IsMine){
             particles.Stop();
+            missile.velocity = Vector3.zero;
         }
     }
 
