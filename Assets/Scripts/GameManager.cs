@@ -8,7 +8,7 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 // Welcome to GameManager where the events of the game will Occur.
 // The game Manager needs to have a photonView. Everyone in the game will have a copy of this script but certain values WILL NEVER be changed unless through a RPC to all players so that copies of this stay consisten
 
-public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviourPun
 {
 
     // We will have a local variable that no one else needs to know called team. Team 0 is Blue, Team 1 is Red, Team 2 is spectator
@@ -50,18 +50,20 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-        
+       
 
         
         
     }
 
     public void StartButtonHit(int buttonId){
+        
+        
         if (!this.button1Hit && buttonId ==1){
             this.button1Hit = true;
             PreemptiveCheck();
             networkedHealth.changeProperties("readyToPlay", 1);
+            //networkedHealth.changeProperties("WallIsDown", 1);
             
          } 
          
@@ -70,10 +72,13 @@ public class GameManager : MonoBehaviour
             this.button2Hit = true;
             PreemptiveCheck();
             networkedHealth.changeProperties("readyToPlay", 1);
+            //networkedHealth.changeProperties("WallIsDown", 1);
             
 
-        }
 
+        }
+        
+        
 
 
         // Takes too long to call changeProperties.. Will Thread...  by the time it gets here the value will not have been updated...
@@ -88,7 +93,11 @@ public class GameManager : MonoBehaviour
         
           if (ready >= 1 ){
             // start the animation here. Drop the Wall down. 
+            
            GetComponent<PhotonView>().RPC("WallDown", RpcTarget.All);
+           
+           //networkedHealth.changeProperties("WallIsDown", 1);
+           
             
        
 

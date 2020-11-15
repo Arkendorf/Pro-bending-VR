@@ -64,6 +64,8 @@ public class NetworkedHealth : MonoBehaviourPun
         int redScore = (int)PhotonNetwork.CurrentRoom.CustomProperties["redScore"];
         int blueScore = (int)PhotonNetwork.CurrentRoom.CustomProperties["blueScore"];
         int ReadyToPlay = (int)PhotonNetwork.CurrentRoom.CustomProperties["readyToPlay"];
+        
+
 
 
 
@@ -86,6 +88,8 @@ public class NetworkedHealth : MonoBehaviourPun
         hash.Add("redScore", redScore);
         hash.Add("blueScore", blueScore);
         hash.Add("readyToPlay", ReadyToPlay);
+        
+
         
         
         PhotonNetwork.CurrentRoom.SetCustomProperties(hash);
@@ -144,7 +148,7 @@ public class NetworkedHealth : MonoBehaviourPun
         int redScore = (int)PhotonNetwork.CurrentRoom.CustomProperties["redScore"];
         int blueScore = (int)PhotonNetwork.CurrentRoom.CustomProperties["blueScore"];
         int ReadyToPlay = (int)PhotonNetwork.CurrentRoom.CustomProperties["readyToPlay"];
-
+        
 
 
         hash.Add("numRedPlayers", numRedPlayers);
@@ -152,8 +156,11 @@ public class NetworkedHealth : MonoBehaviourPun
         hash.Add("redScore", redScore);
         hash.Add("blueScore", blueScore);
         hash.Add("readyToPlay", ReadyToPlay);
+        
 
+        
         hash[key] = (int)hash[key] + value;
+        
 
 
         PhotonNetwork.CurrentRoom.SetCustomProperties(hash);
