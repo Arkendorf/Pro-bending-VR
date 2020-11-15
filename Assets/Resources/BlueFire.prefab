@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 6661671252060933917}
   - component: {fileID: 5355847287488749820}
   m_Layer: 8
-  m_Name: Fire
+  m_Name: BlueFire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -103,7 +103,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c94a3863920f03d46ba61fea470f6aa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collideEffect: {fileID: 8787183090325330737, guid: 54cbced33f2846544ac4b1e9ca279d56,
+  collideEffect: {fileID: 8787183090325330737, guid: e72d6505df651a04f8712de9def9ff4c,
     type: 3}
 --- !u!114 &6661671252060933917
 MonoBehaviour:
@@ -4848,7 +4848,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: de6cfdf59f70d664eb770f264cc5e6b7, type: 2}
+  - {fileID: 2100000, guid: 4cc365ab21fb1a947b914c718ff82821, type: 2}
   - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0

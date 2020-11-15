@@ -485,6 +485,11 @@ MonoBehaviour:
   speaker: {fileID: 0}
   nickName: {fileID: 6103128835486537260}
   nameCanvas: {fileID: 8548574120027484594}
+  blueTeamMaterial: {fileID: 2100000, guid: 40c83f78fc9c3c4489b3b2639eb080be, type: 2}
+  blueTeamElement: BlueFire
+  redTeamMaterial: {fileID: 2100000, guid: 490eb016adba7ea4ca52774f7c2912b0, type: 2}
+  redTeamElement: Fire
+  spectatorMaterial: {fileID: 2100000, guid: 443b8d68ddce62046aa542d5bd482c6f, type: 2}
   headTransformLerp: {fileID: 0}
   leftHandTransformLerp: {fileID: 0}
   rightHandTransformLerp: {fileID: 0}
