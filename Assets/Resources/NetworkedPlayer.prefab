@@ -230,14 +230,13 @@ GameObject:
   - component: {fileID: 2169705539001608684}
   - component: {fileID: 7496755172569070914}
   - component: {fileID: 6435722542409349442}
-  - component: {fileID: 5440285420134073796}
   m_Layer: 5
   m_Name: Quad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2169705539001608684
 RectTransform:
   m_ObjectHideFlags: 0
@@ -283,7 +282,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: bd0bb729cb6159b4ab21c5f62cad24ee, type: 3}
+  - {fileID: 2100000, guid: 02401ecfb1bcf5c48b580b41f5b43e57, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -304,20 +303,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!64 &5440285420134073796
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3223840721028649573}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &4657882048062288324
 GameObject:
   m_ObjectHideFlags: 0
@@ -452,8 +437,8 @@ Transform:
   - {fileID: 5975162887358559728}
   - {fileID: 6235999451238193930}
   - {fileID: 2111781142707313347}
-  - {fileID: 6606389736909087540}
   - {fileID: 4107343791732640335}
+  - {fileID: 6606389736909087540}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -500,6 +485,11 @@ MonoBehaviour:
   speaker: {fileID: 0}
   nickName: {fileID: 6103128835486537260}
   nameCanvas: {fileID: 8548574120027484594}
+  blueTeamMaterial: {fileID: 2100000, guid: 40c83f78fc9c3c4489b3b2639eb080be, type: 2}
+  blueTeamElement: BlueFire
+  redTeamMaterial: {fileID: 2100000, guid: 490eb016adba7ea4ca52774f7c2912b0, type: 2}
+  redTeamElement: Fire
+  spectatorMaterial: {fileID: 2100000, guid: 443b8d68ddce62046aa542d5bd482c6f, type: 2}
   headTransformLerp: {fileID: 0}
   leftHandTransformLerp: {fileID: 0}
   rightHandTransformLerp: {fileID: 0}
@@ -597,6 +587,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 10
   audio: {fileID: -8656342727264720248}
+  gameManager: {fileID: 0}
 --- !u!82 &-8656342727264720248
 AudioSource:
   m_ObjectHideFlags: 0
@@ -813,7 +804,7 @@ RectTransform:
   - {fileID: 2169705539001608684}
   - {fileID: 8380158601928251107}
   m_Father: {fileID: 6063229124274235417}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -892,7 +883,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9342fdcffccc0134c9e60fd2028c9504, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  avatarHead: {fileID: 0}
+  avatarHead: {fileID: 2860003112008028823}
 --- !u!1001 &5452903126234324553
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -997,12 +988,6 @@ PrefabInstance:
       objectReference: {fileID: 6235999451238193930}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 19d4952bb9a405d4badf8dda1d03383d, type: 3}
---- !u!95 &5486537094509352236 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 542827703291317093, guid: 19d4952bb9a405d4badf8dda1d03383d,
-    type: 3}
-  m_PrefabInstance: {fileID: 5452903126234324553}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2111781142707313347 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6260592004764288138, guid: 19d4952bb9a405d4badf8dda1d03383d,
@@ -1012,6 +997,12 @@ Transform:
 --- !u!1 &2111781142707313348 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6260592004764288141, guid: 19d4952bb9a405d4badf8dda1d03383d,
+    type: 3}
+  m_PrefabInstance: {fileID: 5452903126234324553}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &5486537094509352236 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 542827703291317093, guid: 19d4952bb9a405d4badf8dda1d03383d,
     type: 3}
   m_PrefabInstance: {fileID: 5452903126234324553}
   m_PrefabAsset: {fileID: 0}
@@ -1065,7 +1056,7 @@ PrefabInstance:
     - target: {fileID: 6260592004764288138, guid: d7fd73b098e0d034b9a6f41a5b705398,
         type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6260592004764288138, guid: d7fd73b098e0d034b9a6f41a5b705398,
         type: 3}

@@ -18,6 +18,7 @@ public class Missile : MonoBehaviourPun, Photon.Pun.IPunObservable
     private float lifetime;
 
     private TransformLerp transformLerp;
+    private ParticleSystem particles;
 
     // Start is called before the first frame update
     void OnEnable()
@@ -28,6 +29,8 @@ public class Missile : MonoBehaviourPun, Photon.Pun.IPunObservable
     void Start()
     {
         transformLerp = GetComponent<TransformLerp>();
+        particles = GetComponentInChildren<ParticleSystem>();
+
         if (photonView.IsMine)
         {
             transformLerp.enabled = false;
@@ -50,8 +53,12 @@ public class Missile : MonoBehaviourPun, Photon.Pun.IPunObservable
 
             if (velocity.sqrMagnitude * speedMultiplier < minSpeed * minSpeed)
             {
-                PhotonNetwork.Destroy(gameObject);
+                particles.Stop();
             }
+        }
+        if (particles.isStopped)
+        {
+            PhotonNetwork.Destroy(gameObject);
         }
     }
 
