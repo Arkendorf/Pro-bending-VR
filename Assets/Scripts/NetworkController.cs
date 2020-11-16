@@ -146,7 +146,7 @@ public class NetworkController : MonoBehaviourPunCallbacks
         // Probably an unecessary amount of logic here but just keeping it reallly broad in case we ever want to move to 3v3 
         // This will alternate players
         if (this.numRedPlayers  > this.numBluePlayers){
-            if (this.numBluePlayers < this.blueMax || PhotonNetwork.CurrentRoom.PlayerCount <3){
+            if (this.numBluePlayers < this.blueMax){
                 // Assign this player team number 1
                 this.teamNumber = 1;
                 this.numBluePlayers++;
@@ -157,7 +157,7 @@ public class NetworkController : MonoBehaviourPunCallbacks
 
         } // If we make it here there are less or equal redPlayers
         else{
-            if(this.numRedPlayers < this.redMax || PhotonNetwork.CurrentRoom.PlayerCount <3){
+            if(this.numRedPlayers < this.redMax){
                 this.teamNumber = 0;
                 this.numRedPlayers++;
             }else{
@@ -183,7 +183,11 @@ public class NetworkController : MonoBehaviourPunCallbacks
         this.hashProperties.Add("blueScore", this.blueScore);
         this.hashProperties.Add("readyToPlay", this.ReadyToPlay);
         PhotonNetwork.CurrentRoom.SetCustomProperties(this.hashProperties);
-    
+       /// player 
+
+       Hashtable playerHash = new Hashtable();
+        playerHash.Add("TeamNumber", this.teamNumber);
+       PhotonNetwork.LocalPlayer.SetCustomProperties(playerHash);
 
         // Here is where we set up the position of where the player will spawn based on their team
         
@@ -218,8 +222,43 @@ public class NetworkController : MonoBehaviourPunCallbacks
     }
 
 
+
+    public override void OnPlayerLeftRoom(Player otherPlayer){
+
+        // Only the master should update when a player leaves. 
+        
+        Hashtable hash = new Hashtable();
+        int numRed = (int)PhotonNetwork.CurrentRoom.CustomProperties["numRedPlayers"];
+        int numBlue = (int)PhotonNetwork.CurrentRoom.CustomProperties["numBluePlayers"];
+
+        int teamNum = (int)otherPlayer.CustomProperties["TeamNumber"];
+
+        if (teamNum == 0){
+            numRed--;
+            hash.Add("numRedPlayers", numRed);
+
+        }else if (teamNum == 1){
+            numBlue--;
+            hash.Add("numBluePlayers", numBlue);
+
+        }
+
+        PhotonNetwork.CurrentRoom.SetCustomProperties(hash);
+        
+
+
+
+        
+
+
+
+
+
+    }
+
     // Need to implement somesort of playerLeftRoom to keep track of who gets to be red team and who gets to be blue team. 
     // Can't change jain the room properties if you've left
+    /*
     public override void OnLeftRoom(){
         // No way we leave a room without the properities being instantiated already so dont need to make any checks for null 
         // Create a clone 
@@ -238,12 +277,12 @@ public class NetworkController : MonoBehaviourPunCallbacks
         if (this.teamNumber == 0){
             // The problem is that we can only use setCustomProperties I beleive, Cant just directly manipulate the hashtable so we have to do this funkyness
             // 
-            this.redScore--;
+            this.numRedPlayers--;
 
             
 
         }else if (this.teamNumber ==1){
-            this.blueScore--;
+            this.numBluePlayers--;
 
         }
         // Reset the room properities before we leave 
@@ -258,6 +297,7 @@ public class NetworkController : MonoBehaviourPunCallbacks
 
 
     }
+    */
 
     
 
