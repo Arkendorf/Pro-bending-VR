@@ -3,7 +3,32 @@ guid: e0a99bb293bea3b479fe97615d48e0f3
 ModelImporter:
   serializedVersion: 19301
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: WallDividerColor
+    second: {fileID: 2100000, guid: 4d80dbe566e484c67a27d5fe690340fc, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: blueplatform
+    second: {fileID: 2100000, guid: f7e9ad54f5659463fbddf149d77cd937, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: drain
+    second: {fileID: 2100000, guid: b466fc0eb66844ac0af2fc1b9839fb1e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: lambert1
+    second: {fileID: 2100000, guid: b466fc0eb66844ac0af2fc1b9839fb1e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: redPlatform
+    second: {fileID: 2100000, guid: b166b1553246c4d0083b3c21111d9a4d, type: 2}
   materials:
     materialImportMode: 1
     materialName: 0
@@ -45,7 +70,7 @@ ModelImporter:
     importLights: 1
     fileIdsGeneration: 2
     swapUVChannels: 0
-    generateSecondaryUV: 0
+    generateSecondaryUV: 1
     useFileUnits: 1
     keepQuads: 0
     weldVertices: 1
