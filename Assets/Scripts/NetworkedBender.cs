@@ -25,6 +25,9 @@ public class NetworkedBender : MonoBehaviourPun
     [Tooltip("The element prefab to spawn when an element projectile is created")]
     public string element;  
 
+
+    public AudioSource fireNoise;
+
     // The hand's current velocity
     private Vector3 velocity;
     // The hand's position in the previous frame
@@ -137,6 +140,7 @@ public class NetworkedBender : MonoBehaviourPun
         // Set the missile's velocity to move in the direction the arm is reaching (offset between the hand and shoulder)
         // Set the missile's velocity to move at the speed of the maximum magnitude of this punch
         missile.velocity = (handPos.position - shoulderPos).normalized * maxMagnitude;
+        fireNoise.Play();
     }
 
     // Reset the hand
