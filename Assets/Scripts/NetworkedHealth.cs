@@ -9,7 +9,19 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 public class NetworkedHealth : MonoBehaviourPun
 {
     public int health =10;
-    public AudioSource audio;
+    public AudioSource hitOtherSound;
+
+    public AudioSource blueWinsAudio;
+    public GameObject blueFireWorks;
+
+    public AudioSource redWinsAudio;
+    public GameObject redFireWorks;
+
+
+    public AudioSource redLosing;
+    public AudioSource blueLosing;
+    
+
 
     // Grab the GameManager
     public GameManager gameManager;
@@ -28,7 +40,7 @@ public class NetworkedHealth : MonoBehaviourPun
         GetComponent<NetworkedPlayer>().playerHeadLocal.GetComponent<Hit>().networkedHealth = this;   
         
         
-        GameObject.Find("MultiplayerSetup/NetworkController").GetComponent<NetworkController>().networkedHealth = this;
+        
         GameObject.Find("MultiplayerSetup/GameManager").GetComponent<GameManager>().networkedHealth = this;
         
 
@@ -63,14 +75,20 @@ public class NetworkedHealth : MonoBehaviourPun
        
 
         if (this.teamNumber == 0){
-           //changeProperties("redScore", -1);
            redScore--;
         }else if (this.teamNumber ==1){
-            //changeProperties("blueScore", -1);
             blueScore--;
             
         }
+        if (!(redScore < 0 || blueScore < 0)){
 
+            if(redScore == 2 && this.teamNumber == 0){
+                GetComponent<PhotonView>().RPC("RedLosing", RpcTarget.All);
+            }
+
+            if (blueScore ==2 && this.teamNumber == 1){
+                GetComponent<PhotonView>().RPC("BlueLosing", RpcTarget.All);
+            }
         hash.Add("redScore", redScore);
         hash.Add("blueScore", blueScore);
     
@@ -87,7 +105,17 @@ public class NetworkedHealth : MonoBehaviourPun
 
         // Everyone else gets this called
         GetComponent<PhotonView>().RPC("PlayerHit", RpcTarget.Others, health, redScore, blueScore);
-        Debug.Log(health);
+
+        if (blueScore == 0 && this.teamNumber == 1){
+            GetComponent<PhotonView>().RPC("RedWins", RpcTarget.All);
+
+        }
+
+        if (redScore ==0 && this.teamNumber == 0){
+            GetComponent<PhotonView>().RPC("BlueWins", RpcTarget.All);
+        }
+        
+        }
         
         
          
@@ -96,6 +124,8 @@ public class NetworkedHealth : MonoBehaviourPun
     public void UpdateScoreBoard(int redScore, int blueScore){    
         gameManager.RedScoreDisplay.SetText(redScore.ToString());
         gameManager.BlueScoreDisplay.SetText(blueScore.ToString());
+        gameManager.RedScoreDisplay2.SetText(redScore.ToString());
+        gameManager.BlueScoreDisplay2.SetText(blueScore.ToString());
         
 
     }
@@ -103,8 +133,8 @@ public class NetworkedHealth : MonoBehaviourPun
     public void PlayerHit(int health, int redScore, int blueScore){
         // Everyone else sets the health of their copy of this networked health to the new health
         this.health = health;
-        // Everyone else hears this audio
-        audio.Play();
+        // Everyone else hears this hitOtherSound
+        hitOtherSound.Play();
 
         UpdateScoreBoard(redScore, blueScore);
         
@@ -129,6 +159,51 @@ public class NetworkedHealth : MonoBehaviourPun
 
     public int GetValue(string key){
         return (int)PhotonNetwork.CurrentRoom.CustomProperties[key];
+    }
+
+    
+    public void winDisplays(){
+        gameManager.win1Display.enabled = true;
+        gameManager.win2Display.enabled = true;
+        gameManager.RedScoreDisplay.enabled = false;
+        gameManager.BlueScoreDisplay.enabled = false;
+        gameManager.RedScoreDisplay2.enabled = false;
+        gameManager.BlueScoreDisplay2.enabled = false;
+        gameManager.RedText1.enabled = false;
+        gameManager.BlueText1.enabled = false;
+        gameManager.RedText2.enabled = false;
+        gameManager.BlueText2.enabled = false;
+
+
+    }
+
+    [PunRPC]
+    public void RedWins(){
+        redWinsAudio.Play();
+        winDisplays();
+        gameManager.win1Display.SetText("Red Team Wins!");
+        gameManager.win2Display.SetText("Red Team Wins!");
+        Instantiate(redFireWorks, new Vector3(0, -6.5f,0), Quaternion.identity);
+    }
+
+    [PunRPC]
+    public void BlueWins(){
+        blueWinsAudio.Play();
+        winDisplays();
+        gameManager.win1Display.SetText("Blue Team Wins!");
+        gameManager.win2Display.SetText("Blue Team Wins!");
+        Instantiate(blueFireWorks, new Vector3(0, -6.5f, 0), Quaternion.identity);
+    }
+
+
+    [PunRPC]
+    public void RedLosing(){
+        redLosing.Play();
+    }
+
+    [PunRPC]
+    public void BlueLosing(){
+        blueLosing.Play();
     }
 }
 

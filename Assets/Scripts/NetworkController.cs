@@ -11,14 +11,14 @@ public class NetworkController : MonoBehaviourPunCallbacks
     public string _room = "My_Custom_Room";
     private Vector3 EntryPoint;
     private Quaternion EntryRotation;
-    public NetworkedHealth networkedHealth;
+    
     
     // Define the red, blue, and spectator positions 
-    static Vector3 redSpawn = new Vector3(8,-3.8f, 0);
-    static Vector3 blueSpawn = new Vector3(-8,-3.8f,0);
+    static Vector3 redSpawn = new Vector3(7.7f,-6f, 0);
+    static Vector3 blueSpawn = new Vector3(-7.7f,-6f,0);
 
     // Maybe we could add some randomness to the player spawn if it is a spectator just so everyone doesn't spawn on top of each other Not a priority
-    static Vector3 spectatorSpawn = new Vector3(0,-3.8f,0);
+    static Vector3 spectatorSpawn = new Vector3(0,1.5f,-33);
     
 
     
@@ -55,7 +55,7 @@ public class NetworkController : MonoBehaviourPunCallbacks
 
     GameObject MultiSetup;
     GameObject OVRplayer;
-    GameObject Wall;
+    public GameObject Wall;
     //GameObject GameManager;
     Animator blackScreen;
      
@@ -64,11 +64,15 @@ public class NetworkController : MonoBehaviourPunCallbacks
     // Will be set and sent into instantation of player
     int teamNumber;
 
+
+    // drag intro audio to fill this
+    public AudioSource introCommentation;
+
     void Start()
     {
         PhotonNetwork.ConnectUsingSettings();
         this.blackScreen = GameObject.Find("MultiplayerSetup/OVRPlayerController/OVRCameraRig/TrackingSpace/CenterEyeAnchor/Blocker/Cube").GetComponent<Animator>();  
-        this.Wall = GameObject.Find("StartWall");
+        //this.Wall = GameObject.Find("StartWall");
     }
 
     void OnDestroy()
@@ -93,32 +97,9 @@ public class NetworkController : MonoBehaviourPunCallbacks
     }
 
 
-// Is a MonoBehaviourPunCallBack called each time "LoadBalancingClient" Entered a room, no matter if this client created it or simply joined. 
-// A similar method is OnPlayerEnteredRoom(Player newPlayer). Which works similarily but is called any time a remote player enters the room (so not the host)
-// This is where we instantiate each player Prefab, currently the prefab is called "NetworkedPlayer" and is a prefab located in Assets/Resources/NetworkedPlayer.prefab
-// Loads from resources folder. 
-
     public override void OnJoinedRoom()
     {
-       // Each prefab that we instantiate must have a Photon View component. The photon view component will then have Observed Components
-       // In the example of the player it has a photon view component with an observed component that is just the NetworkedPlayer Script 
 
-       // Documentation is found here https://doc.photonengine.com/en-us/pun/current/gameplay/instantiation#photonnetwork_instantiate
-       // Position and rotation of where to create the object must be set. Will be originally instatiated here even if moved already
-
-
-       // Instantiate can take another parameter for custom instantiation Data. It takes an object[]
-       // object[] myCustomInitData = GetInitData();
-        //PhotonNetwork.Instantiate("MyPrefabName", new Vector3(0, 0, 0), Quaternion.identity, 0, myCustomInitData);
-
-        // Then to recieve this custom data on the prefab's script side use the OnPhotonInstantiate callback 
-        /**
-        public void OnPhotonInstantiate(PhotonMessageInfo info)
-        {
-        object[] instantiationData = info.photonView.InstantiationData;
-            // ...
-        }
-        **/
 
 
 
@@ -169,7 +150,10 @@ public class NetworkController : MonoBehaviourPunCallbacks
 
         
         if (this.ReadyToPlay >= 2){
-            this.Wall.SetActive(false);
+            // Previously it used to be this.Wall.SetActive(false); that worked
+            this.Wall.GetComponent<Animator>().enabled = false;
+            this.Wall.transform.position  = new Vector3(0.88f, -8.786f, 0);
+
         }
         
 
@@ -217,12 +201,25 @@ public class NetworkController : MonoBehaviourPunCallbacks
        this.blackScreen.SetBool("ShouldFade", true);
       
 
+      // Play the audio here... IF number of players has reached 2 it means that the first two players are ready to begin
+
+      if (PhotonNetwork.CurrentRoom.PlayerCount == 2){
+        GetComponent<PhotonView>().RPC("PlayCommentation", RpcTarget.All);
+      }
+
         
 
     }
 
 
 
+    [PunRPC]
+    public void PlayCommentation(){
+        introCommentation.Play();
+
+    }
+
+    // Handle team assignments for when someone leaves the room
     public override void OnPlayerLeftRoom(Player otherPlayer){
 
         // Only the master should update when a player leaves. 

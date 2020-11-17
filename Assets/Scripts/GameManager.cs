@@ -29,6 +29,18 @@ public class GameManager : MonoBehaviourPun
     // Speaking of scoreboard lets grab two references to text to update the red and blue score
     public TextMeshProUGUI RedScoreDisplay;
     public TextMeshProUGUI BlueScoreDisplay;
+    public TextMeshProUGUI RedScoreDisplay2;
+    public TextMeshProUGUI BlueScoreDisplay2;
+
+    public TextMeshProUGUI RedText1;
+    public TextMeshProUGUI RedText2;
+    public TextMeshProUGUI BlueText1;
+    public TextMeshProUGUI BlueText2;
+
+
+    public TextMeshProUGUI win1Display;
+    public TextMeshProUGUI win2Display;
+    
 
 
     private bool button1Hit = false;
@@ -38,13 +50,21 @@ public class GameManager : MonoBehaviourPun
 
     public Animator wallDown;
 
+    public AudioSource playersReadyAudio;
+    public AudioSource blueReadyAudio;
+    public AudioSource redReadyAudio;
+    public AudioSource wallRumble;
+
+    public AudioSource buttonClick;
+
+    
+
 
     // Start is called before the first frame update
     void Start()
     {
-
-        
-        
+        win1Display.enabled = false;
+        win2Display.enabled = false;
     }
 
     // Update is called once per frame
@@ -61,18 +81,26 @@ public class GameManager : MonoBehaviourPun
         
         if (!this.button1Hit && buttonId ==1){
             this.button1Hit = true;
-            PreemptiveCheck();
+            buttonClick.Play();
+            bool allReady = PreemptiveCheck();
+            if (!allReady){
+                GetComponent<PhotonView>().RPC("RedReady", RpcTarget.All);
+            }
             networkedHealth.changeProperties("readyToPlay", 1);
-            //networkedHealth.changeProperties("WallIsDown", 1);
+            
             
          } 
          
          
         if (!this.button2Hit && buttonId ==2){
             this.button2Hit = true;
-            PreemptiveCheck();
+            buttonClick.Play();
+            bool allReady = PreemptiveCheck();
+            if (!allReady){
+            GetComponent<PhotonView>().RPC("BlueReady", RpcTarget.All);
+            }
             networkedHealth.changeProperties("readyToPlay", 1);
-            //networkedHealth.changeProperties("WallIsDown", 1);
+            
             
 
 
@@ -88,20 +116,18 @@ public class GameManager : MonoBehaviourPun
 
     }
 
-    public void PreemptiveCheck(){
+    public bool PreemptiveCheck(){
         int ready = networkedHealth.GetValue("readyToPlay");
         
           if (ready >= 1 ){
             // start the animation here. Drop the Wall down. 
             
            GetComponent<PhotonView>().RPC("WallDown", RpcTarget.All);
+           return true;
            
-           //networkedHealth.changeProperties("WallIsDown", 1);
-           
-            
-       
-
         }
+
+        return false;
 
     }
 
@@ -111,9 +137,39 @@ public class GameManager : MonoBehaviourPun
     [PunRPC]
     public void WallDown(){
         wallDown.SetBool("PlayersReady", true);
+        playersReadyAudio.Play();
+        wallRumble.Play();
+        
+        StartCoroutine(timeout());
 
     }
 
+    IEnumerator timeout()
+    {
+        float t = 6;
+        
+        while (t>0){
+            t-=Time.deltaTime;
+            OVRInput.SetControllerVibration(0.5f, 0.5f, OVRInput.Controller.RTouch);
+            OVRInput.SetControllerVibration(0.5f, 0.5f, OVRInput.Controller.LTouch);
+            yield return null; 
+        }
+        OVRInput.SetControllerVibration(0, 0, OVRInput.Controller.RTouch);
+        OVRInput.SetControllerVibration(0, 0, OVRInput.Controller.LTouch);
+        
+    }
+
+    [PunRPC]
+    public void BlueReady(){
+        blueReadyAudio.Play();
+    }
+
+    [PunRPC]
+    public void RedReady(){
+        redReadyAudio.Play();
+    }
+
+    
     
     
 }
