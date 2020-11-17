@@ -106,12 +106,12 @@ public class NetworkedHealth : MonoBehaviourPun
         // Everyone else gets this called
         GetComponent<PhotonView>().RPC("PlayerHit", RpcTarget.Others, health, redScore, blueScore);
 
-        if (blueScore == 0 && this.teamNumber == 1){
+        if (blueScore == 0 && this.teamNumber == 1 && redScore > 0){
             GetComponent<PhotonView>().RPC("RedWins", RpcTarget.All);
 
         }
 
-        if (redScore ==0 && this.teamNumber == 0){
+        if (redScore == 0 && this.teamNumber == 0 && blueScore > 0){
             GetComponent<PhotonView>().RPC("BlueWins", RpcTarget.All);
         }
         
