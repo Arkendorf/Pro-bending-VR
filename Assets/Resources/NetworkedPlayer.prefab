@@ -1702,9 +1702,9 @@ PrefabInstance:
       objectReference: {fileID: 6235999451238193930}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 19d4952bb9a405d4badf8dda1d03383d, type: 3}
---- !u!95 &5486537094509352236 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 542827703291317093, guid: 19d4952bb9a405d4badf8dda1d03383d,
+--- !u!1 &2111781142707313348 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6260592004764288141, guid: 19d4952bb9a405d4badf8dda1d03383d,
     type: 3}
   m_PrefabInstance: {fileID: 5452903126234324553}
   m_PrefabAsset: {fileID: 0}
@@ -1714,9 +1714,9 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 5452903126234324553}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &2111781142707313348 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6260592004764288141, guid: 19d4952bb9a405d4badf8dda1d03383d,
+--- !u!95 &5486537094509352236 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 542827703291317093, guid: 19d4952bb9a405d4badf8dda1d03383d,
     type: 3}
   m_PrefabInstance: {fileID: 5452903126234324553}
   m_PrefabAsset: {fileID: 0}
@@ -1799,9 +1799,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d7fd73b098e0d034b9a6f41a5b705398, type: 3}
---- !u!95 &1345347426978506390 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 9027890362761029715, guid: d7fd73b098e0d034b9a6f41a5b705398,
+--- !u!1 &4107343791732640328 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6260592004764288141, guid: d7fd73b098e0d034b9a6f41a5b705398,
     type: 3}
   m_PrefabInstance: {fileID: 8062041641852145349}
   m_PrefabAsset: {fileID: 0}
@@ -1811,9 +1811,9 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 8062041641852145349}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &4107343791732640328 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6260592004764288141, guid: d7fd73b098e0d034b9a6f41a5b705398,
+--- !u!95 &1345347426978506390 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 9027890362761029715, guid: d7fd73b098e0d034b9a6f41a5b705398,
     type: 3}
   m_PrefabInstance: {fileID: 8062041641852145349}
   m_PrefabAsset: {fileID: 0}

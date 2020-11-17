@@ -18,7 +18,7 @@ public class NetworkController : MonoBehaviourPunCallbacks
     static Vector3 blueSpawn = new Vector3(-7.7f,-6f,0);
 
     // Maybe we could add some randomness to the player spawn if it is a spectator just so everyone doesn't spawn on top of each other Not a priority
-    static Vector3 spectatorSpawn = new Vector3(0,1.5f,-33);
+    static Vector3 spectatorSpawn = new Vector3(0, -1.2f,-41);
     
 
     
