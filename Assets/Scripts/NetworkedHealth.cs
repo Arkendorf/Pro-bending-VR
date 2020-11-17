@@ -82,11 +82,11 @@ public class NetworkedHealth : MonoBehaviourPun
         }
         if (!(redScore < 0 || blueScore < 0)){
 
-            if(redScore == 2 && this.teamNumber == 0){
+            if (redScore == 2 && this.teamNumber == 0 && blueScore > 0) {
                 GetComponent<PhotonView>().RPC("RedLosing", RpcTarget.All);
             }
 
-            if (blueScore ==2 && this.teamNumber == 1){
+            if (blueScore == 2 && this.teamNumber == 1 && redScore > 0) {
                 GetComponent<PhotonView>().RPC("BlueLosing", RpcTarget.All);
             }
         hash.Add("redScore", redScore);
