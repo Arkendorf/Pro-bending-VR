@@ -14,8 +14,8 @@ public class NetworkController : MonoBehaviourPunCallbacks
     
     
     // Define the red, blue, and spectator positions 
-    static Vector3 redSpawn = new Vector3(7.7f,-6f, 0);
-    static Vector3 blueSpawn = new Vector3(-7.7f,-6f,0);
+    static Vector3 redSpawn = new Vector3(6.5f, -6f, 0);
+    static Vector3 blueSpawn = new Vector3(-6.5f, -6f,0);
 
     // Maybe we could add some randomness to the player spawn if it is a spectator just so everyone doesn't spawn on top of each other Not a priority
     static Vector3 spectatorSpawn = new Vector3(0, -1.2f,-41);
