@@ -66,7 +66,8 @@ public class NetworkedPlayer : MonoBehaviourPun, Photon.Pun.IPunObservable
 
             if (teamNumber == 1 || teamNumber == 0) {
                 // TODO: Set this to false
-                GameObject.Find("MultiplayerSetup/OVRPlayerController").GetComponent<OVRPlayerController>().EnableLinearMovement = true;
+                GameObject.Find("MultiplayerSetup/OVRPlayerController").GetComponent<OVRPlayerController>().EnableLinearMovement = false;
+                GameObject.Find("MultiplayerSetup/OVRPlayerController").GetComponent<OVRPlayerController>().EnableRotation = false;
             }
 
             playerHeadLocal = playerControllerLocal.Find("OVRCameraRig/TrackingSpace/CenterEyeAnchor");
